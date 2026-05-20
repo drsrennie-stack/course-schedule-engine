@@ -1,0 +1,32 @@
+Item ID,Item,Type,Week,Due Date,Points,Percent of Course,SLO Codes,SLO Descriptions
+rat1,Readiness Assurance 1 (iRAT + tRAT),Readiness Assurance,Week 1,2026-06-15,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app1,Application Activity: Tissue ID Challenge,Application Activity,Week 1,2026-06-17,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+rat2,Readiness Assurance 2 (iRAT + tRAT),Readiness Assurance,Week 2,2026-06-22,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app2,Application Activity: Axial Skeleton Build,Application Activity,Week 2,2026-06-24,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+lab1,Lab Exam 1,Lab Practical Exam,Week 2,2026-06-25,80,8.0%,SLO-1; SLO-2,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging."
+rat3,Readiness Assurance 3 (iRAT + tRAT),Readiness Assurance,Week 3,2026-06-29,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app3,Application Activity: Joint Classification,Application Activity,Week 3,2026-07-01,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+lab2,Lab Exam 2,Lab Practical Exam,Week 3,2026-07-02,80,8.0%,SLO-1; SLO-2,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging."
+rat4,Readiness Assurance 4 (iRAT + tRAT),Readiness Assurance,Week 4,2026-07-06,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app4,Application Activity: Limb Muscle Map,Application Activity,Week 4,2026-07-08,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+midterm,Midterm Exam,Midterm Exam,Week 4,2026-07-09,160,16.0%,SLO-1; SLO-2; SLO-3,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging.; Describe the structural relationships between organs and systems."
+rat5,Readiness Assurance 5 (iRAT + tRAT),Readiness Assurance,Week 5,2026-07-13,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app5,Application Activity: Brain Atlas Build,Application Activity,Week 5,2026-07-15,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+lab3,Lab Exam 3,Lab Practical Exam,Week 5,2026-07-16,80,8.0%,SLO-1; SLO-2,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging."
+rat6,Readiness Assurance 6 (iRAT + tRAT),Readiness Assurance,Week 6,2026-07-20,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app6,Application Activity: Endocrine Gland Locator,Application Activity,Week 6,2026-07-22,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+lab4,Lab Exam 4,Lab Practical Exam,Week 6,2026-07-23,80,8.0%,SLO-1; SLO-2,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging."
+rat7,Readiness Assurance 7 (iRAT + tRAT),Readiness Assurance,Week 7,2026-07-27,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app7,Application Activity: Circulatory and Airway Trace,Application Activity,Week 7,2026-07-29,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+lab5,Lab Exam 5,Lab Practical Exam,Week 7,2026-07-30,80,8.0%,SLO-1; SLO-2,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging."
+rat8,Readiness Assurance 8 (iRAT + tRAT),Readiness Assurance,Week 8,2026-08-03,15,1.5%,SLO-1,Identify and describe anatomical structures of the human body using correct terminology.
+app8,Application Activity: Viscera Synthesis,Application Activity,Week 8,2026-08-05,15,1.5%,SLO-3; SLO-4,Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.
+final,Final Exam,Final Exam,Week 8,2026-08-06,200,20.0%,SLO-1; SLO-2; SLO-3; SLO-4; SLO-5,"Identify and describe anatomical structures of the human body using correct terminology.; Locate structures across organ systems on models, specimens, and imaging.; Describe the structural relationships between organs and systems.; Apply anatomical knowledge to clinical and case-based scenarios.; Demonstrate accurate anatomical drawing and synthesis from memory."
+
+SLO Summary
+SLO Code,SLO Description,Items Touching SLO,Points Touching SLO
+SLO-1,Identify and describe anatomical structures of the human body using correct terminology.,15,880
+SLO-2,"Locate structures across organ systems on models, specimens, and imaging.",7,760
+SLO-3,Describe the structural relationships between organs and systems.,10,480
+SLO-4,Apply anatomical knowledge to clinical and case-based scenarios.,9,320
+SLO-5,Demonstrate accurate anatomical drawing and synthesis from memory.,1,200

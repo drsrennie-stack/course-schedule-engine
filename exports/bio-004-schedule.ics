@@ -1,0 +1,296 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MedMasters Collaborative//Course Schedule Engine//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:BIO 004 Human Anatomy due dates
+BEGIN:VEVENT
+UID:rat1-20260615@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260615
+DTEND;VALUE=DATE:20260616
+SUMMARY:BIO 004: Readiness Assurance 1 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on anatomical terminology. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app1-20260617@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260617
+DTEND;VALUE=DATE:20260618
+SUMMARY:BIO 004: Application Activity: Tissue ID Challenge (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:rat2-20260622@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260622
+DTEND;VALUE=DATE:20260623
+SUMMARY:BIO 004: Readiness Assurance 2 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on bone tissue. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app2-20260624@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260624
+DTEND;VALUE=DATE:20260625
+SUMMARY:BIO 004: Application Activity: Axial Skeleton Build (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:lab1-20260625@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260625
+DTEND;VALUE=DATE:20260626
+SUMMARY:BIO 004: Lab Exam 1 (80 pts)
+DESCRIPTION:Lab Practical Exam. Worth 80 points. Covers Weeks 1 to 2: ter
+ minology\, tissues\, integument\, axial skeleton. SLOs: SLO-1\, SLO-2.
+CATEGORIES:Lab Practical Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Lab Exam 1
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat3-20260629@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260629
+DTEND;VALUE=DATE:20260630
+SUMMARY:BIO 004: Readiness Assurance 3 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on the appendicular skeleton. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app3-20260701@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260701
+DTEND;VALUE=DATE:20260702
+SUMMARY:BIO 004: Application Activity: Joint Classification (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:lab2-20260702@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260702
+DTEND;VALUE=DATE:20260703
+SUMMARY:BIO 004: Lab Exam 2 (80 pts)
+DESCRIPTION:Lab Practical Exam. Worth 80 points. Covers Week 3: appendicu
+ lar skeleton and joints. SLOs: SLO-1\, SLO-2.
+CATEGORIES:Lab Practical Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Lab Exam 2
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat4-20260706@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260706
+DTEND;VALUE=DATE:20260707
+SUMMARY:BIO 004: Readiness Assurance 4 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on skeletal muscle organization. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app4-20260708@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260708
+DTEND;VALUE=DATE:20260709
+SUMMARY:BIO 004: Application Activity: Limb Muscle Map (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:midterm-20260709@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260709
+DTEND;VALUE=DATE:20260710
+SUMMARY:BIO 004: Midterm Exam (160 pts)
+DESCRIPTION:Midterm Exam. Worth 160 points. Cumulative: foundations throu
+ gh the muscular system. SLOs: SLO-1\, SLO-2\, SLO-3.
+CATEGORIES:Midterm Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Midterm Exam
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat5-20260713@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260713
+DTEND;VALUE=DATE:20260714
+SUMMARY:BIO 004: Readiness Assurance 5 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on nervous tissue. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app5-20260715@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260715
+DTEND;VALUE=DATE:20260716
+SUMMARY:BIO 004: Application Activity: Brain Atlas Build (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:lab3-20260716@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260716
+DTEND;VALUE=DATE:20260717
+SUMMARY:BIO 004: Lab Exam 3 (80 pts)
+DESCRIPTION:Lab Practical Exam. Worth 80 points. Covers Weeks 4 to 5: mus
+ cular system and central nervous system. SLOs: SLO-1\, SLO-2.
+CATEGORIES:Lab Practical Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Lab Exam 3
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat6-20260720@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260721
+SUMMARY:BIO 004: Readiness Assurance 6 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on cranial nerves and the ANS. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app6-20260722@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260722
+DTEND;VALUE=DATE:20260723
+SUMMARY:BIO 004: Application Activity: Endocrine Gland Locator (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:lab4-20260723@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260723
+DTEND;VALUE=DATE:20260724
+SUMMARY:BIO 004: Lab Exam 4 (80 pts)
+DESCRIPTION:Lab Practical Exam. Worth 80 points. Covers Week 6: periphera
+ l nervous system\, senses\, and endocrine anatomy. SLOs: SLO-1\, SLO-2.
+CATEGORIES:Lab Practical Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Lab Exam 4
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat7-20260727@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260727
+DTEND;VALUE=DATE:20260728
+SUMMARY:BIO 004: Readiness Assurance 7 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on heart anatomy. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app7-20260729@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260729
+DTEND;VALUE=DATE:20260730
+SUMMARY:BIO 004: Application Activity: Circulatory and Airway Trace (15 p
+ ts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:lab5-20260730@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260730
+DTEND;VALUE=DATE:20260731
+SUMMARY:BIO 004: Lab Exam 5 (80 pts)
+DESCRIPTION:Lab Practical Exam. Worth 80 points. Covers Week 7: cardiovas
+ cular\, lymphatic\, and respiratory systems. SLOs: SLO-1\, SLO-2.
+CATEGORIES:Lab Practical Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Lab Exam 5
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rat8-20260803@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260803
+DTEND;VALUE=DATE:20260804
+SUMMARY:BIO 004: Readiness Assurance 8 (iRAT + tRAT) (15 pts)
+DESCRIPTION:Readiness Assurance. Worth 15 points. Covers pre-class readin
+ g on the digestive system. SLOs: SLO-1.
+CATEGORIES:Readiness Assurance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:app8-20260805@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260805
+DTEND;VALUE=DATE:20260806
+SUMMARY:BIO 004: Application Activity: Viscera Synthesis (15 pts)
+DESCRIPTION:Application Activity. Worth 15 points. Team 4S activity\, com
+ pleted and submitted in class. SLOs: SLO-3\, SLO-4.
+CATEGORIES:Application Activity
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:final-20260806@course-schedule-engine
+DTSTAMP:20260520T153622Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+SUMMARY:BIO 004: Final Exam (200 pts)
+DESCRIPTION:Final Exam. Worth 200 points. Cumulative: all systems\, lectu
+ re and lab. SLOs: SLO-1\, SLO-2\, SLO-3\, SLO-4\, SLO-5.
+CATEGORIES:Final Exam
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Tomorrow: Final Exam
+END:VALARM
+END:VEVENT
+END:VCALENDAR

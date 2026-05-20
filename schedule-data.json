@@ -1,0 +1,911 @@
+{
+  "schemaVersion": "1.0",
+  "course": {
+    "code": "BIO 004",
+    "title": "Human Anatomy",
+    "institution": "Solano Community College",
+    "term": "Summer 2026",
+    "instructor": "Dr. Sharilyn Rennie",
+    "meetingPattern": "Monday through Thursday",
+    "format": "8-week summer intensive, in-person, Team-Based Learning",
+    "timezone": "America/Los_Angeles",
+    "isSampleData": true,
+    "slos": [
+      {
+        "code": "SLO-1",
+        "description": "Identify and describe anatomical structures of the human body using correct terminology."
+      },
+      {
+        "code": "SLO-2",
+        "description": "Locate structures across organ systems on models, specimens, and imaging."
+      },
+      {
+        "code": "SLO-3",
+        "description": "Describe the structural relationships between organs and systems."
+      },
+      {
+        "code": "SLO-4",
+        "description": "Apply anatomical knowledge to clinical and case-based scenarios."
+      },
+      {
+        "code": "SLO-5",
+        "description": "Demonstrate accurate anatomical drawing and synthesis from memory."
+      }
+    ],
+    "itemTypes": {
+      "rat": "Readiness Assurance",
+      "application": "Application Activity",
+      "lab-exam": "Lab Practical Exam",
+      "midterm": "Midterm Exam",
+      "final": "Final Exam"
+    },
+    "totalPoints": 1000
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "theme": "Foundations and Histology",
+      "start": "2026-06-15",
+      "end": "2026-06-18",
+      "days": [
+        {
+          "date": "2026-06-15",
+          "weekday": "Monday",
+          "topic": "Orientation and Anatomical Terminology",
+          "focus": "Anatomical position, body planes, directional terms, body cavities, regional terms.",
+          "inClass": [
+            "Course orientation",
+            "Team formation",
+            "Mini-lecture: the language of anatomy",
+            "Readiness Assurance 1 (iRAT + tRAT)"
+          ],
+          "items": [
+            {
+              "id": "rat1",
+              "title": "Readiness Assurance 1 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-15",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on anatomical terminology."
+            }
+          ],
+          "nightly": [
+            "Read the syllabus and mark all 5 lab exam dates, the midterm, and the final in your planner.",
+            "Make flashcards for the directional terms: superior, inferior, medial, lateral, proximal, distal, anterior, posterior, superficial, deep.",
+            "Draw the body in anatomical position and label the three planes from memory."
+          ]
+        },
+        {
+          "date": "2026-06-16",
+          "weekday": "Tuesday",
+          "topic": "Epithelial Tissue",
+          "focus": "Classification of epithelia by shape and layers, glandular epithelium.",
+          "inClass": [
+            "Histology lab: epithelial slides",
+            "Team microscopy stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Pre-read the connective tissue section before tomorrow.",
+            "Build a table of epithelial types: shape, layers, and one location each.",
+            "Sketch simple squamous, stratified squamous, and pseudostratified epithelium from memory."
+          ]
+        },
+        {
+          "date": "2026-06-17",
+          "weekday": "Wednesday",
+          "topic": "Connective Tissue",
+          "focus": "Connective tissue proper, cartilage, bone, and blood as connective tissue.",
+          "inClass": [
+            "Histology lab: connective tissue identification",
+            "Application Activity: Tissue ID Challenge"
+          ],
+          "items": [
+            {
+              "id": "app1",
+              "title": "Application Activity: Tissue ID Challenge",
+              "type": "application",
+              "points": 15,
+              "due": "2026-06-17",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Quiz yourself: name the connective tissue found in 8 locations without looking.",
+            "Draw a labeled diagram of the four primary tissue types covered so far.",
+            "Pre-read the integumentary chapter, focus on the epidermal layers."
+          ]
+        },
+        {
+          "date": "2026-06-18",
+          "weekday": "Thursday",
+          "topic": "Integumentary System",
+          "focus": "Epidermal layers, dermis, accessory structures, surface markings.",
+          "inClass": [
+            "Integumentary models",
+            "Skin-layer drawing workshop"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a cross-section of skin from memory: label all epidermal layers, the dermis, and 3 accessory structures.",
+            "Build flashcards for the skin accessory structures: hair follicle, sebaceous gland, sweat gland, nail.",
+            "Preview Week 2: skim the bone tissue section."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "theme": "Skeletal System I: Bone and the Axial Skeleton",
+      "start": "2026-06-22",
+      "end": "2026-06-25",
+      "days": [
+        {
+          "date": "2026-06-22",
+          "weekday": "Monday",
+          "topic": "Bone Tissue and Bone Classification",
+          "focus": "Compact vs spongy bone, bone shapes, structure of a long bone, bone markings.",
+          "inClass": [
+            "Readiness Assurance 2 (iRAT + tRAT)",
+            "Bone model stations"
+          ],
+          "items": [
+            {
+              "id": "rat2",
+              "title": "Readiness Assurance 2 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-22",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on bone tissue."
+            }
+          ],
+          "nightly": [
+            "Draw a long bone in longitudinal section and label the diaphysis, epiphysis, and 6 internal structures.",
+            "Make flashcards for the bone markings: process, condyle, foramen, fossa, tubercle, trochanter.",
+            "Self-quiz: compact vs spongy bone and where each is found."
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "weekday": "Tuesday",
+          "topic": "Axial Skeleton: The Skull",
+          "focus": "Cranial and facial bones, sutures, major foramina, the bony orbit.",
+          "inClass": [
+            "Skull station rotation",
+            "Team identification drill"
+          ],
+          "items": [],
+          "nightly": [
+            "Label a blank skull diagram (lateral and anterior views) from memory.",
+            "Make flashcards for the 8 cranial and 14 facial bones.",
+            "List the bones that form the orbit and the nasal septum."
+          ]
+        },
+        {
+          "date": "2026-06-24",
+          "weekday": "Wednesday",
+          "topic": "Axial Skeleton: Vertebral Column and Thorax",
+          "focus": "Vertebral regions, intervertebral structure, ribs, sternum, spinal curvatures.",
+          "inClass": [
+            "Application Activity: Axial Skeleton Build"
+          ],
+          "items": [
+            {
+              "id": "app2",
+              "title": "Application Activity: Axial Skeleton Build",
+              "type": "application",
+              "points": 15,
+              "due": "2026-06-24",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw the vertebral column and label all five regions and both curvatures.",
+            "Compare a cervical, thoracic, and lumbar vertebra in a 3-column table.",
+            "Begin Lab Exam 1 review: re-walk every station topic from Weeks 1 and 2."
+          ]
+        },
+        {
+          "date": "2026-06-25",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 1",
+          "focus": "Practical exam: foundations, histology, integumentary, axial skeleton.",
+          "inClass": [
+            "Lab Practical Exam 1"
+          ],
+          "items": [
+            {
+              "id": "lab1",
+              "title": "Lab Exam 1",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-06-25",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Weeks 1 to 2: terminology, tissues, integument, axial skeleton."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 1 feedback once it posts.",
+            "Pre-read the upper limb section for tomorrow.",
+            "Reset your flashcard deck and retire the cards you have mastered."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "theme": "Skeletal System II: Appendicular Skeleton and Joints",
+      "start": "2026-06-29",
+      "end": "2026-07-02",
+      "days": [
+        {
+          "date": "2026-06-29",
+          "weekday": "Monday",
+          "topic": "Appendicular Skeleton: Upper Limb",
+          "focus": "Pectoral girdle, humerus, radius, ulna, carpals, metacarpals, phalanges.",
+          "inClass": [
+            "Readiness Assurance 3 (iRAT + tRAT)",
+            "Upper limb stations"
+          ],
+          "items": [
+            {
+              "id": "rat3",
+              "title": "Readiness Assurance 3 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-29",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on the appendicular skeleton."
+            }
+          ],
+          "nightly": [
+            "Label the bones of the upper limb and pectoral girdle from memory.",
+            "Make flashcards for the bony landmarks of the humerus, radius, and ulna.",
+            "Sketch the carpal bones in two rows and name each one."
+          ]
+        },
+        {
+          "date": "2026-06-30",
+          "weekday": "Tuesday",
+          "topic": "Appendicular Skeleton: Lower Limb",
+          "focus": "Pelvic girdle, femur, patella, tibia, fibula, tarsals, metatarsals, phalanges.",
+          "inClass": [
+            "Lower limb stations",
+            "Team identification drill"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the bones of the lower limb and pelvic girdle from memory.",
+            "Compare the male and female pelvis in a quick labeled sketch.",
+            "Self-quiz: the tarsal bones and the arches of the foot."
+          ]
+        },
+        {
+          "date": "2026-07-01",
+          "weekday": "Wednesday",
+          "topic": "Articulations (Joints)",
+          "focus": "Structural and functional joint classes, synovial joint anatomy, joint movements.",
+          "inClass": [
+            "Application Activity: Joint Classification"
+          ],
+          "items": [
+            {
+              "id": "app3",
+              "title": "Application Activity: Joint Classification",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-01",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Build a table of synovial joint types with one example and its movements for each.",
+            "Draw a synovial joint in cross-section and label 5 structures.",
+            "Lab Exam 2 review: re-walk every upper limb, lower limb, and joint station."
+          ]
+        },
+        {
+          "date": "2026-07-02",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 2",
+          "focus": "Practical exam: appendicular skeleton and joints.",
+          "inClass": [
+            "Lab Practical Exam 2"
+          ],
+          "items": [
+            {
+              "id": "lab2",
+              "title": "Lab Exam 2",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-02",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 3: appendicular skeleton and joints."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 2 feedback once it posts.",
+            "Pre-read the skeletal muscle organization section.",
+            "Update your flashcard deck before the muscular unit begins."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "theme": "Muscular System and Midterm",
+      "start": "2026-07-06",
+      "end": "2026-07-09",
+      "days": [
+        {
+          "date": "2026-07-06",
+          "weekday": "Monday",
+          "topic": "Skeletal Muscle Organization and Naming",
+          "focus": "Gross muscle structure, fascicle arrangement, muscle naming criteria, action vocabulary.",
+          "inClass": [
+            "Readiness Assurance 4 (iRAT + tRAT)",
+            "Muscle naming workshop"
+          ],
+          "items": [
+            {
+              "id": "rat4",
+              "title": "Readiness Assurance 4 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-06",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on skeletal muscle organization."
+            }
+          ],
+          "nightly": [
+            "Draw skeletal muscle from gross structure down to the fascicle and label each connective tissue layer.",
+            "Make flashcards for the muscle naming criteria with one example muscle each.",
+            "Self-quiz the action vocabulary: flexion, extension, abduction, adduction, rotation, circumduction."
+          ]
+        },
+        {
+          "date": "2026-07-07",
+          "weekday": "Tuesday",
+          "topic": "Muscles of the Head, Neck, and Trunk",
+          "focus": "Facial expression, mastication, neck, abdominal wall, and deep back muscles.",
+          "inClass": [
+            "Muscle identification stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the muscles of facial expression and mastication from memory.",
+            "Sketch the abdominal wall layers and name each muscle.",
+            "Make flashcards for the origin region and action of 10 trunk muscles."
+          ]
+        },
+        {
+          "date": "2026-07-08",
+          "weekday": "Wednesday",
+          "topic": "Muscles of the Limbs",
+          "focus": "Upper and lower limb muscle groups and compartments.",
+          "inClass": [
+            "Application Activity: Limb Muscle Map"
+          ],
+          "items": [
+            {
+              "id": "app4",
+              "title": "Application Activity: Limb Muscle Map",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-08",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Map the muscle compartments of the arm and leg in a labeled diagram.",
+            "Midterm review: build a one-page concept map of Weeks 1 to 4.",
+            "Re-test yourself on every flashcard deck from Weeks 1 to 4."
+          ]
+        },
+        {
+          "date": "2026-07-09",
+          "weekday": "Thursday",
+          "topic": "Midterm Exam",
+          "focus": "Comprehensive lecture and lab exam covering Weeks 1 to 4.",
+          "inClass": [
+            "Midterm Exam"
+          ],
+          "items": [
+            {
+              "id": "midterm",
+              "title": "Midterm Exam",
+              "type": "midterm",
+              "points": 160,
+              "due": "2026-07-09",
+              "slo": [
+                "SLO-1",
+                "SLO-2",
+                "SLO-3"
+              ],
+              "note": "Cumulative: foundations through the muscular system."
+            }
+          ],
+          "nightly": [
+            "Light night: rest, and review your midterm feedback once it posts.",
+            "Pre-read the nervous tissue section.",
+            "Note any topics from the midterm that you want to revisit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "theme": "Nervous System I: Tissue and Central Nervous System",
+      "start": "2026-07-13",
+      "end": "2026-07-16",
+      "days": [
+        {
+          "date": "2026-07-13",
+          "weekday": "Monday",
+          "topic": "Nervous Tissue",
+          "focus": "Neuron structure, neuroglia of the CNS and PNS, gray vs white matter.",
+          "inClass": [
+            "Readiness Assurance 5 (iRAT + tRAT)",
+            "Histology of nervous tissue"
+          ],
+          "items": [
+            {
+              "id": "rat5",
+              "title": "Readiness Assurance 5 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-13",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on nervous tissue."
+            }
+          ],
+          "nightly": [
+            "Draw a multipolar neuron and label every structure plus the direction of signal travel.",
+            "Make flashcards for the neuroglia of the CNS and the PNS.",
+            "Self-quiz: gray matter vs white matter, location and composition."
+          ]
+        },
+        {
+          "date": "2026-07-14",
+          "weekday": "Tuesday",
+          "topic": "Spinal Cord and Spinal Nerves",
+          "focus": "Spinal cord cross-section, meninges, spinal nerves, plexuses, reflex arc anatomy.",
+          "inClass": [
+            "Spinal cord models",
+            "Plexus tracing stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a spinal cord cross-section and label the horns, columns, roots, and meninges.",
+            "Map the four major nerve plexuses and name one nerve from each.",
+            "Make flashcards for the components of a reflex arc."
+          ]
+        },
+        {
+          "date": "2026-07-15",
+          "weekday": "Wednesday",
+          "topic": "The Brain",
+          "focus": "Cerebrum, diencephalon, brainstem, cerebellum, ventricular system.",
+          "inClass": [
+            "Application Activity: Brain Atlas Build"
+          ],
+          "items": [
+            {
+              "id": "app5",
+              "title": "Application Activity: Brain Atlas Build",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-15",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Label a midsagittal brain diagram from memory.",
+            "Make flashcards for the four ventricles and the lobes of the cerebrum.",
+            "Lab Exam 3 review: re-walk the muscular and nervous tissue / CNS stations."
+          ]
+        },
+        {
+          "date": "2026-07-16",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 3",
+          "focus": "Practical exam: muscular system, nervous tissue, and the central nervous system.",
+          "inClass": [
+            "Lab Practical Exam 3"
+          ],
+          "items": [
+            {
+              "id": "lab3",
+              "title": "Lab Exam 3",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-16",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Weeks 4 to 5: muscular system and central nervous system."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 3 feedback once it posts.",
+            "Pre-read the cranial nerves section.",
+            "Refresh your flashcard deck before the special senses unit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 6,
+      "theme": "Nervous System II: Peripheral Pathways and Special Senses",
+      "start": "2026-07-20",
+      "end": "2026-07-23",
+      "days": [
+        {
+          "date": "2026-07-20",
+          "weekday": "Monday",
+          "topic": "Cranial Nerves and the Autonomic Nervous System",
+          "focus": "The 12 cranial nerves; structural pathways of the sympathetic and parasympathetic divisions.",
+          "inClass": [
+            "Readiness Assurance 6 (iRAT + tRAT)",
+            "Cranial nerve stations"
+          ],
+          "items": [
+            {
+              "id": "rat6",
+              "title": "Readiness Assurance 6 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-20",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on cranial nerves and the ANS."
+            }
+          ],
+          "nightly": [
+            "Make flashcards for all 12 cranial nerves: name, number, and sensory / motor / both.",
+            "Draw the sympathetic and parasympathetic pathways structurally.",
+            "Use a mnemonic to lock in cranial nerve order, then test yourself on a blank list."
+          ]
+        },
+        {
+          "date": "2026-07-21",
+          "weekday": "Tuesday",
+          "topic": "Special Senses: Eye and Ear",
+          "focus": "Gross and internal anatomy of the eye and the ear.",
+          "inClass": [
+            "Eye and ear models",
+            "Dissection demonstration"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the eye and the ear in cross-section from memory.",
+            "Make flashcards for the structures light passes through and the structures sound passes through.",
+            "List the accessory structures of the eye."
+          ]
+        },
+        {
+          "date": "2026-07-22",
+          "weekday": "Wednesday",
+          "topic": "Endocrine Glands (Anatomy)",
+          "focus": "Location and gross anatomy of the major endocrine glands.",
+          "inClass": [
+            "Application Activity: Endocrine Gland Locator"
+          ],
+          "items": [
+            {
+              "id": "app6",
+              "title": "Application Activity: Endocrine Gland Locator",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-22",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw a body outline and place every endocrine gland in its correct location.",
+            "Make flashcards for the gross appearance and location of 8 endocrine glands.",
+            "Lab Exam 4 review: re-walk the brain, cranial nerve, senses, and endocrine stations."
+          ]
+        },
+        {
+          "date": "2026-07-23",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 4",
+          "focus": "Practical exam: brain, cranial nerves, special senses, and endocrine glands.",
+          "inClass": [
+            "Lab Practical Exam 4"
+          ],
+          "items": [
+            {
+              "id": "lab4",
+              "title": "Lab Exam 4",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-23",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 6: peripheral nervous system, senses, and endocrine anatomy."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 4 feedback once it posts.",
+            "Pre-read the heart anatomy section.",
+            "Reset your flashcard deck for the cardiovascular unit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 7,
+      "theme": "Cardiovascular, Lymphatic, and Respiratory Systems",
+      "start": "2026-07-27",
+      "end": "2026-07-30",
+      "days": [
+        {
+          "date": "2026-07-27",
+          "weekday": "Monday",
+          "topic": "The Heart",
+          "focus": "Chambers, valves, great vessels, and coronary circulation anatomy.",
+          "inClass": [
+            "Readiness Assurance 7 (iRAT + tRAT)",
+            "Heart models and dissection"
+          ],
+          "items": [
+            {
+              "id": "rat7",
+              "title": "Readiness Assurance 7 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-27",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on heart anatomy."
+            }
+          ],
+          "nightly": [
+            "Draw the heart and label all four chambers, all four valves, and the great vessels.",
+            "Trace a drop of blood through the heart and label the coronary vessels.",
+            "Make flashcards for the heart valves and what each one separates."
+          ]
+        },
+        {
+          "date": "2026-07-28",
+          "weekday": "Tuesday",
+          "topic": "Blood Vessels",
+          "focus": "Major arteries and veins, structure of the three vessel wall types.",
+          "inClass": [
+            "Vascular pathway stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the major arteries and veins on a body outline from memory.",
+            "Compare the three vessel wall layers in a quick table.",
+            "Trace blood from the heart to the hand and back."
+          ]
+        },
+        {
+          "date": "2026-07-29",
+          "weekday": "Wednesday",
+          "topic": "Lymphatic and Respiratory Systems",
+          "focus": "Lymphatic vessels and organs; respiratory tract anatomy.",
+          "inClass": [
+            "Application Activity: Circulatory and Airway Trace"
+          ],
+          "items": [
+            {
+              "id": "app7",
+              "title": "Application Activity: Circulatory and Airway Trace",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-29",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw the respiratory tract from nose to alveolus and label each structure.",
+            "Map the lymphatic organs on a body outline.",
+            "Lab Exam 5 review: re-walk the heart, vessel, lymphatic, and respiratory stations."
+          ]
+        },
+        {
+          "date": "2026-07-30",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 5",
+          "focus": "Practical exam: cardiovascular, lymphatic, and respiratory systems.",
+          "inClass": [
+            "Lab Practical Exam 5"
+          ],
+          "items": [
+            {
+              "id": "lab5",
+              "title": "Lab Exam 5",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-30",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 7: cardiovascular, lymphatic, and respiratory systems."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 5 feedback once it posts.",
+            "Pre-read the digestive system section.",
+            "Begin a cumulative review list for the final exam."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 8,
+      "theme": "Viscera and Synthesis",
+      "start": "2026-08-03",
+      "end": "2026-08-06",
+      "days": [
+        {
+          "date": "2026-08-03",
+          "weekday": "Monday",
+          "topic": "Digestive System",
+          "focus": "Gastrointestinal tract and accessory digestive organs anatomy.",
+          "inClass": [
+            "Readiness Assurance 8 (iRAT + tRAT)",
+            "Digestive system models"
+          ],
+          "items": [
+            {
+              "id": "rat8",
+              "title": "Readiness Assurance 8 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-08-03",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on the digestive system."
+            }
+          ],
+          "nightly": [
+            "Draw the digestive tract and label the accessory organs.",
+            "Make flashcards for the layers of the GI tract wall and the accessory organs.",
+            "Add this week's topics to your final exam review list."
+          ]
+        },
+        {
+          "date": "2026-08-04",
+          "weekday": "Tuesday",
+          "topic": "Urinary System",
+          "focus": "Kidney gross and internal anatomy, ureters, bladder, urethra.",
+          "inClass": [
+            "Kidney dissection"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a kidney in frontal section and label the internal anatomy.",
+            "Trace the path of urine from the glomerulus to the urethra.",
+            "Final review: rebuild your concept map for Weeks 5 to 7."
+          ]
+        },
+        {
+          "date": "2026-08-05",
+          "weekday": "Wednesday",
+          "topic": "Reproductive Systems",
+          "focus": "Male and female reproductive system anatomy.",
+          "inClass": [
+            "Application Activity: Viscera Synthesis"
+          ],
+          "items": [
+            {
+              "id": "app8",
+              "title": "Application Activity: Viscera Synthesis",
+              "type": "application",
+              "points": 15,
+              "due": "2026-08-05",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Label the male and female reproductive systems from memory.",
+            "Final review: re-test every flashcard deck and retire what you have mastered.",
+            "Walk every lab station topic from the whole course one more time."
+          ]
+        },
+        {
+          "date": "2026-08-06",
+          "weekday": "Thursday",
+          "topic": "Final Exam",
+          "focus": "Comprehensive lecture and lab exam covering the entire course.",
+          "inClass": [
+            "Comprehensive Final Exam"
+          ],
+          "items": [
+            {
+              "id": "final",
+              "title": "Final Exam",
+              "type": "final",
+              "points": 200,
+              "due": "2026-08-06",
+              "slo": [
+                "SLO-1",
+                "SLO-2",
+                "SLO-3",
+                "SLO-4",
+                "SLO-5"
+              ],
+              "note": "Cumulative: all systems, lecture and lab."
+            }
+          ],
+          "nightly": [
+            "You made it. Rest well before the final.",
+            "Light review only: skim your concept maps, do not cram.",
+            "Bring your student ID and arrive early."
+          ]
+        }
+      ]
+    }
+  ],
+  "spacedRepetition": {
+    "intervalsDays": [
+      1,
+      3,
+      8,
+      21
+    ],
+    "note": "Review offsets, in days, after a topic is first taught."
+  }
+}

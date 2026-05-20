@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Schedule, BIO 004 Human Anatomy</title>
+<meta name="description" content="Interactive course schedule for BIO 004 Human Anatomy. Toggle between the full schedule, a weekly view, this week, and a graded-items list. Export to a calendar, a spaced-repetition deck, a planner checklist, and an SLO grade map.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Lora:ital,wght@1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Course Schedule Engine, student-facing view.
+   Palette: PRIMARY teaching stack (navy, brushed gold, terra cotta).
+   No sage, no cream. White cards on an off-white page.
+   ============================================================ */
+:root{
+  --navy:#1E3D4C;
+  --navy-deep:#142a36;
+  --navy-tint:#EDF1F3;
+  --gold:#B8924A;
+  --terra:#C2734D;
+  --terra-dark:#A0522D;
+  --white:#FFFFFF;
+  --off-white:#FAFAF9;
+  --gray:#565E62;
+  --gray-line:#B6BDC0;
+  --font-eyebrow:'DM Sans',system-ui,sans-serif;
+  --font-head:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-emph:'Lora',Georgia,serif;
+  --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
+  --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--off-white);
+  color:var(--navy);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 20px 64px;}
+
+/* ---- Skip link ---- */
+.skip-link{
+  position:absolute;left:8px;top:-48px;
+  background:var(--navy);color:var(--white);
+  padding:10px 16px;border-radius:6px;
+  font-family:var(--font-head);font-weight:600;
+  text-decoration:none;z-index:100;
+  transition:top 150ms ease;
+}
+.skip-link:focus{top:8px;}
+
+/* ---- Header ---- */
+.site-header{padding:8px 0 20px;border-bottom:1px solid var(--gray-line);margin-bottom:24px;}
+.eyebrow{
+  font-family:var(--font-eyebrow);
+  font-size:12px;font-weight:600;
+  letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--terra-dark);margin:0 0 10px;
+}
+h1{
+  font-family:var(--font-head);font-weight:800;
+  font-size:clamp(1.7rem,4vw,2.4rem);
+  color:var(--navy);margin:0 0 6px;line-height:1.15;
+}
+.subhead{
+  font-family:var(--font-head);font-weight:600;
+  font-size:clamp(1rem,2vw,1.18rem);
+  color:var(--terra-dark);margin:0 0 14px;
+}
+.sample-flag{
+  display:inline-block;
+  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--navy);background:var(--navy-tint);
+  border:1px solid var(--navy);border-radius:999px;
+  padding:4px 12px;
+}
+.course-meta{
+  font-family:var(--font-emph);font-style:italic;
+  color:var(--gray);font-size:0.96rem;margin:12px 0 0;
+}
+
+/* ---- Controls ---- */
+.controls{
+  display:flex;flex-wrap:wrap;gap:18px 28px;
+  align-items:flex-end;
+  margin-bottom:8px;padding-bottom:18px;
+  border-bottom:1px solid var(--gray-line);
+}
+fieldset.control-group{border:0;margin:0;padding:0;}
+.control-group legend,.control-label{
+  font-family:var(--font-eyebrow);
+  font-size:12px;font-weight:600;
+  letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--terra-dark);
+  padding:0;margin:0 0 8px;
+}
+/* Segmented view switch built from radios */
+.seg{display:flex;flex-wrap:wrap;gap:6px;}
+.seg label{
+  font-family:var(--font-head);font-weight:600;font-size:0.92rem;
+  color:var(--navy);background:var(--white);
+  border:1px solid var(--navy);border-radius:7px;
+  padding:9px 14px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background 150ms ease,color 150ms ease;
+}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;}
+.seg input:checked + label{background:var(--navy);color:var(--white);}
+.seg input:focus-visible + label{
+  outline:3px solid var(--navy);outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
+}
+.seg label:hover{background:var(--navy-tint);}
+.seg input:checked + label:hover{background:var(--navy-deep);}
+
+/* Nightly toggle switch */
+.switch-row{display:flex;align-items:center;gap:10px;}
+.switch{position:relative;display:inline-block;width:48px;height:26px;flex:none;}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;}
+.switch .track{
+  position:absolute;inset:0;background:var(--white);
+  border:1.5px solid var(--navy);border-radius:999px;
+  transition:background 160ms ease;
+}
+.switch .thumb{
+  position:absolute;top:3px;left:3px;width:18px;height:18px;
+  background:var(--navy);border-radius:50%;
+  transition:transform 160ms ease;
+}
+.switch input:checked ~ .track{background:var(--navy);}
+.switch input:checked ~ .thumb{background:var(--white);transform:translateX(22px);}
+.switch input:focus-visible ~ .track{
+  outline:3px solid var(--navy);outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
+}
+.switch-label{font-family:var(--font-head);font-weight:600;font-size:0.95rem;cursor:pointer;}
+
+/* Generic buttons */
+.btn{
+  font-family:var(--font-head);font-weight:600;font-size:0.92rem;
+  border-radius:7px;padding:9px 15px;cursor:pointer;
+  border:1px solid var(--navy);
+  transition:background 150ms ease,transform 150ms ease;
+}
+.btn-primary{background:var(--navy);color:var(--white);}
+.btn-primary:hover{background:var(--navy-deep);}
+.btn-secondary{background:var(--white);color:var(--navy);}
+.btn-secondary:hover{background:var(--navy-tint);}
+.btn:focus-visible{
+  outline:3px solid var(--navy);outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
+}
+.btn:active{transform:translateY(1px);}
+
+/* ---- Export panel ---- */
+.export{
+  margin:18px 0 6px;background:var(--white);
+  border:1px solid var(--navy);border-radius:10px;
+}
+.export>summary{
+  list-style:none;cursor:pointer;
+  font-family:var(--font-head);font-weight:700;font-size:1.02rem;
+  color:var(--navy);padding:14px 18px;
+  display:flex;align-items:center;gap:10px;
+}
+.export>summary::-webkit-details-marker{display:none;}
+.export>summary::before{
+  content:"";width:9px;height:9px;flex:none;
+  border-right:2.5px solid var(--terra-dark);
+  border-bottom:2.5px solid var(--terra-dark);
+  transform:rotate(-45deg);transition:transform 150ms ease;
+}
+.export[open]>summary::before{transform:rotate(45deg);}
+.export>summary:focus-visible{
+  outline:3px solid var(--navy);outline-offset:-3px;
+  box-shadow:0 0 0 5px rgba(184,146,74,0.4);border-radius:10px;
+}
+.export-body{padding:4px 18px 20px;}
+.export-intro{
+  font-family:var(--font-emph);font-style:italic;
+  color:var(--gray);margin:0 0 16px;font-size:0.97rem;
+}
+.export-grid{display:grid;gap:14px;}
+@media(min-width:640px){.export-grid{grid-template-columns:1fr 1fr;}}
+.export-card{
+  border:1px solid var(--gray-line);border-radius:9px;padding:14px;
+}
+.export-card h3{
+  font-family:var(--font-head);font-weight:600;font-size:1.02rem;
+  color:var(--terra-dark);margin:0 0 4px;
+}
+.export-card p{margin:0 0 12px;font-size:0.9rem;color:var(--gray);}
+.export-card .btn-row{display:flex;flex-wrap:wrap;gap:8px;}
+.export-status{
+  margin-top:14px;font-family:var(--font-head);font-weight:600;
+  font-size:0.92rem;color:var(--navy);
+  background:var(--navy-tint);border:1px solid var(--navy);
+  border-radius:7px;padding:10px 14px;min-height:1px;
+}
+.export-status:empty{display:none;}
+.help{margin-top:14px;}
+.help summary{
+  cursor:pointer;font-family:var(--font-head);font-weight:600;
+  font-size:0.92rem;color:var(--navy);
+}
+.help summary:focus-visible{
+  outline:3px solid var(--navy);outline-offset:2px;border-radius:4px;
+}
+.help-body{
+  font-size:0.9rem;color:var(--navy);
+  border-left:3px solid var(--gold);padding:6px 0 6px 14px;margin-top:10px;
+}
+.help-body p{margin:6px 0;}
+.help-body strong{color:var(--terra-dark);}
+
+/* ---- Status line ---- */
+.status-line{
+  font-family:var(--font-head);font-weight:600;font-size:0.95rem;
+  color:var(--gray);margin:16px 0 4px;
+}
+
+/* ---- Schedule region ---- */
+.view-head{
+  font-family:var(--font-head);font-weight:800;
+  font-size:clamp(1.3rem,3vw,1.7rem);
+  color:var(--navy);margin:22px 0 4px;
+}
+.view-head:focus{outline:none;}
+.view-sub{
+  font-family:var(--font-emph);font-style:italic;
+  color:var(--gray);margin:0 0 18px;
+}
+
+/* Week block */
+.week-block{margin:0 0 30px;}
+.week-head{
+  font-family:var(--font-head);font-weight:600;
+  font-size:1.18rem;color:var(--terra-dark);
+  margin:24px 0 4px;
+  padding-bottom:6px;border-bottom:1px solid var(--gray-line);
+}
+.week-dates{
+  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
+  letter-spacing:0.05em;text-transform:uppercase;color:var(--gray);
+  margin:0 0 14px;
+}
+
+/* Day grid */
+.day-grid{display:grid;gap:14px;}
+@media(min-width:720px){.day-grid{grid-template-columns:1fr 1fr;}}
+
+/* Day card */
+.day-card{
+  background:var(--white);
+  border:1px solid var(--navy);
+  border-radius:11px;padding:16px 17px;
+  box-shadow:var(--shadow-rest);
+  transition:transform 200ms ease,box-shadow 200ms ease;
+}
+.day-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);}
+.day-card.is-exam{border-left:5px solid var(--gold);}
+.day-card.is-today{border-left:5px solid var(--gold);box-shadow:var(--shadow-hover);}
+.day-card.is-past{background:var(--navy-tint);border-color:var(--navy);}
+.day-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px;}
+.day-date{
+  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
+  letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);
+}
+.day-state-tag{
+  font-family:var(--font-eyebrow);font-size:10.5px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  border-radius:999px;padding:3px 9px;flex:none;
+}
+.tag-today{background:var(--gold);color:var(--navy-deep);}
+.tag-done{background:var(--navy);color:var(--white);}
+.day-topic{
+  font-family:var(--font-head);font-weight:700;
+  font-size:1.08rem;color:var(--navy);margin:2px 0 4px;
+}
+.day-focus{font-size:0.92rem;color:var(--navy);margin:0 0 12px;}
+.day-section-label{
+  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--terra-dark);margin:12px 0 6px;
+}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  font-size:0.82rem;color:var(--navy);
+  background:var(--off-white);border:1px solid var(--gray-line);
+  border-radius:6px;padding:4px 9px;
+}
+
+/* Graded item badge inside a day card */
+.graded-list{display:flex;flex-direction:column;gap:8px;}
+.graded-item{
+  border:1px solid var(--navy);border-radius:8px;
+  padding:9px 11px;background:var(--white);
+}
+.graded-item.exam{border:1px solid var(--gold);border-left:5px solid var(--gold);}
+.gi-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;}
+.gi-type{
+  font-family:var(--font-eyebrow);font-size:10px;font-weight:600;
+  letter-spacing:0.07em;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;flex:none;
+}
+.type-exam{background:var(--gold);color:var(--navy-deep);}
+.type-graded{background:var(--navy);color:var(--white);}
+.gi-title{font-family:var(--font-head);font-weight:600;font-size:0.95rem;color:var(--navy);}
+.gi-meta{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:6px;font-size:0.84rem;}
+.gi-due{color:var(--terra-dark);font-weight:600;}
+.gi-points{color:var(--navy);font-weight:700;}
+.gi-slo{color:var(--gray);}
+.gi-note{font-size:0.83rem;color:var(--gray);margin:6px 0 0;font-style:italic;font-family:var(--font-emph);}
+
+/* Nightly block */
+.nightly{
+  margin-top:12px;border-top:1px dashed var(--gray-line);padding-top:10px;
+}
+.nightly-intro{
+  font-family:var(--font-emph);font-style:italic;
+  font-size:0.85rem;color:var(--gray);margin:0 0 7px;
+}
+.nightly ul{margin:0;padding-left:0;list-style:none;}
+.nightly li{
+  position:relative;padding:4px 0 4px 24px;font-size:0.9rem;color:var(--navy);
+}
+.nightly li::before{
+  content:"";position:absolute;left:0;top:9px;
+  width:12px;height:12px;border:1.5px solid var(--gray);border-radius:3px;
+}
+
+/* This-week banner */
+.tw-banner{
+  background:var(--white);border:1px solid var(--navy);
+  border-left:5px solid var(--gold);border-radius:11px;
+  padding:18px 20px;margin:0 0 22px;box-shadow:var(--shadow-rest);
+}
+.tw-banner h3{
+  font-family:var(--font-head);font-weight:700;font-size:1.15rem;
+  color:var(--navy);margin:0 0 6px;
+}
+.tw-banner p{margin:4px 0;font-size:0.95rem;}
+.tw-stats{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:12px;}
+.tw-stat{display:flex;flex-direction:column;}
+.tw-stat .num{font-family:var(--font-head);font-weight:800;font-size:1.5rem;color:var(--terra-dark);line-height:1;}
+.tw-stat .lbl{
+  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
+  letter-spacing:0.05em;text-transform:uppercase;color:var(--gray);margin-top:4px;
+}
+.progress-track{
+  height:10px;background:var(--navy-tint);border:1px solid var(--navy);
+  border-radius:999px;overflow:hidden;margin:14px 0 4px;
+}
+.progress-fill{height:100%;background:var(--gold);}
+.due-soon{margin:14px 0 0;}
+.due-soon h4{
+  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 8px;
+}
+.due-soon ul{margin:0;padding-left:20px;}
+.due-soon li{font-size:0.92rem;margin:4px 0;}
+
+/* Weekly nav */
+.week-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 6px;}
+.week-nav .picker{
+  font-family:var(--font-head);font-weight:600;font-size:0.95rem;
+  border:1px solid var(--navy);border-radius:7px;padding:9px 12px;
+  background:var(--white);color:var(--navy);
+}
+.week-nav .picker:focus-visible{
+  outline:3px solid var(--navy);outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
+}
+
+/* Graded table */
+.table-scroll{overflow-x:auto;}
+table.graded-table{
+  width:100%;border-collapse:collapse;
+  background:var(--white);border:1px solid var(--navy);
+  border-radius:11px;overflow:hidden;
+}
+.graded-table caption{
+  text-align:left;font-family:var(--font-emph);font-style:italic;
+  color:var(--gray);padding:0 0 10px;
+}
+.graded-table th,.graded-table td{
+  text-align:left;padding:11px 13px;font-size:0.9rem;
+  border-bottom:1px solid var(--gray-line);
+}
+.graded-table thead th{
+  background:var(--navy);color:var(--white);
+  font-family:var(--font-head);font-weight:600;
+  font-size:0.82rem;letter-spacing:0.03em;
+}
+.graded-table tbody tr:hover{background:var(--navy-tint);}
+.graded-table tbody tr.exam-row td:first-child{border-left:4px solid var(--gold);}
+.graded-table .num{font-weight:700;color:var(--navy);}
+.graded-table tfoot td{
+  font-family:var(--font-head);font-weight:800;
+  background:var(--navy-tint);color:var(--navy);font-size:0.95rem;
+}
+.legend{
+  display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 0;
+  font-size:0.85rem;color:var(--gray);
+}
+.legend span{display:inline-flex;align-items:center;gap:7px;}
+.legend .sw{width:16px;height:16px;border-radius:4px;flex:none;}
+.sw-exam{background:var(--white);border:1px solid var(--gold);border-left:5px solid var(--gold);}
+.sw-graded{background:var(--navy);}
+.sw-done{background:var(--navy-tint);border:1px solid var(--navy);}
+.sw-today{background:var(--white);border:1px solid var(--navy);border-left:5px solid var(--gold);}
+
+/* Footer */
+.site-footer{
+  margin-top:40px;padding-top:18px;border-top:1px solid var(--gray-line);
+  font-size:0.85rem;color:var(--gray);
+}
+.site-footer p{margin:4px 0;}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important;}
+  .day-card:hover{transform:none;}
+}
+
+/* Print, this produces the PDF when the reader chooses Save as PDF */
+@media print{
+  body{background:#fff;font-size:11.5pt;}
+  .wrap{max-width:none;padding:0;}
+  .controls,.export,.status-line,.skip-link,.week-nav,.no-print{display:none !important;}
+  .site-header{border-color:#000;}
+  .day-card{
+    box-shadow:none;border:1px solid #444;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .week-block{break-inside:avoid;}
+  .week-head{break-after:avoid;}
+  .day-card:hover{transform:none;}
+  a{text-decoration:none;color:inherit;}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the schedule</a>
+<div class="wrap">
+
+  <header class="site-header">
+    <p class="eyebrow" id="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
+    <h1 id="course-title">Course Schedule</h1>
+    <p class="subhead" id="course-subhead">Human Anatomy &middot; Summer 2026</p>
+    <p class="sample-flag" id="sample-flag" hidden>Sample data, replace with your real dates and topics</p>
+    <p class="course-meta" id="course-meta"></p>
+  </header>
+
+  <nav class="controls" aria-label="Schedule view and options">
+    <fieldset class="control-group">
+      <legend>View</legend>
+      <div class="seg" id="view-switch" role="radiogroup" aria-label="Choose a schedule view">
+        <input type="radio" name="view" id="view-thisweek" value="thisweek" checked>
+        <label for="view-thisweek">This week</label>
+        <input type="radio" name="view" id="view-full" value="full">
+        <label for="view-full">Full schedule</label>
+        <input type="radio" name="view" id="view-weekly" value="weekly">
+        <label for="view-weekly">Weekly</label>
+        <input type="radio" name="view" id="view-graded" value="graded">
+        <label for="view-graded">Graded items</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="control-group">
+      <legend>Options</legend>
+      <div class="switch-row">
+        <span class="switch">
+          <input type="checkbox" id="nightly-toggle" checked aria-describedby="nightly-desc">
+          <span class="track" aria-hidden="true"></span>
+          <span class="thumb" aria-hidden="true"></span>
+        </span>
+        <label class="switch-label" for="nightly-toggle">Show nightly recommended tasks</label>
+      </div>
+      <span id="nightly-desc" class="sr-only">Nightly tasks are recommended study work. They are not graded and carry no points.</span>
+    </fieldset>
+
+    <div class="control-group">
+      <span class="control-label" id="pdf-label">Print</span>
+      <button type="button" class="btn btn-secondary" id="print-btn" aria-describedby="pdf-label">Save full schedule as PDF</button>
+    </div>
+  </nav>
+
+  <details class="export" id="export-panel">
+    <summary>Export and copy into your other tools</summary>
+    <div class="export-body">
+      <p class="export-intro">Send this schedule into a calendar, a spaced-repetition app, a task planner, or a grade tracker. Download a file, or copy a ready-to-paste block.</p>
+      <div class="export-grid">
+
+        <div class="export-card">
+          <h3>Calendar</h3>
+          <p>Every graded item with its due date. Imports into Google Calendar, Apple Calendar, Outlook, and most planners.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" data-export="ics">Download .ics</button>
+          </div>
+        </div>
+
+        <div class="export-card">
+          <h3>Spaced repetition</h3>
+          <p>A starter Anki deck, one card per topic, plus a nightly study plan that schedules reviews for you.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" data-export="anki">Download deck (.csv)</button>
+            <button type="button" class="btn btn-secondary" data-export="studyplan">Download study plan (.txt)</button>
+          </div>
+        </div>
+
+        <div class="export-card">
+          <h3>Task planner</h3>
+          <p>A Markdown checklist grouped by week. Paste into Notion, Todoist, Obsidian, Apple Notes, or any planner.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" data-export="checklist-copy">Copy checklist</button>
+            <button type="button" class="btn btn-secondary" data-export="checklist-file">Download .md</button>
+          </div>
+        </div>
+
+        <div class="export-card">
+          <h3>SLO grade map</h3>
+          <p>Every graded item mapped to a Student Learning Outcome, with points and weight. For your SLO tracking and grading tool.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" data-export="slo-copy">Copy SLO map</button>
+            <button type="button" class="btn btn-secondary" data-export="slo-file">Download .csv</button>
+          </div>
+        </div>
+
+      </div>
+      <p class="export-status" id="export-status" role="status" aria-live="polite"></p>
+
+      <details class="help">
+        <summary>How to import each file</summary>
+        <div class="help-body">
+          <p><strong>Calendar (.ics):</strong> In Google Calendar, open Settings, then Import and export, then Import. In Apple Calendar, choose File, then Import.</p>
+          <p><strong>Anki deck (.csv):</strong> In Anki, choose File, then Import, pick the file, set the field separator to Comma, and map Front, Back, Deck, and Tags. The file already names a deck per week.</p>
+          <p><strong>Study plan (.txt):</strong> Open it in any text editor or paste it into your planner. Each date lists the recommended tasks and which topics to review that night.</p>
+          <p><strong>Planner checklist (.md):</strong> Paste directly into Notion, Obsidian, or Apple Notes. For Todoist or Things, paste into the quick-add box, each line becomes a task.</p>
+          <p><strong>SLO grade map (.csv):</strong> Import into your grade or SLO tool as a CSV. The first row is the header. One row per graded item, with the mapped SLO codes.</p>
+        </div>
+      </details>
+    </div>
+  </details>
+
+  <p class="status-line" id="status-line" role="status" aria-live="polite"></p>
+
+  <main id="main">
+    <div id="schedule-region"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p id="footer-course"></p>
+    <p>Course schedule and nightly study guidance prepared by Dr. Sharilyn Rennie.</p>
+    <p>Generated by the Course Schedule Engine. Nightly tasks are recommended, not graded.</p>
+  </footer>
+
+</div>
+
+<!-- =========================================================
+     SCHEDULE DATA, single source of truth.
+     The build script (build_schedule.py) replaces the contents
+     of this element when you update schedule-data.json or the
+     spreadsheet. You can also edit it here by hand.
+     ========================================================= -->
+<script id="schedule-data" type="application/json">
+{
+  "schemaVersion": "1.0",
+  "course": {
+    "code": "BIO 004",
+    "title": "Human Anatomy",
+    "institution": "Solano Community College",
+    "term": "Summer 2026",
+    "instructor": "Dr. Sharilyn Rennie",
+    "meetingPattern": "Monday through Thursday",
+    "format": "8-week summer intensive, in-person, Team-Based Learning",
+    "timezone": "America/Los_Angeles",
+    "isSampleData": true,
+    "slos": [
+      {
+        "code": "SLO-1",
+        "description": "Identify and describe anatomical structures of the human body using correct terminology."
+      },
+      {
+        "code": "SLO-2",
+        "description": "Locate structures across organ systems on models, specimens, and imaging."
+      },
+      {
+        "code": "SLO-3",
+        "description": "Describe the structural relationships between organs and systems."
+      },
+      {
+        "code": "SLO-4",
+        "description": "Apply anatomical knowledge to clinical and case-based scenarios."
+      },
+      {
+        "code": "SLO-5",
+        "description": "Demonstrate accurate anatomical drawing and synthesis from memory."
+      }
+    ],
+    "itemTypes": {
+      "rat": "Readiness Assurance",
+      "application": "Application Activity",
+      "lab-exam": "Lab Practical Exam",
+      "midterm": "Midterm Exam",
+      "final": "Final Exam"
+    },
+    "totalPoints": 1000
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "theme": "Foundations and Histology",
+      "start": "2026-06-15",
+      "end": "2026-06-18",
+      "days": [
+        {
+          "date": "2026-06-15",
+          "weekday": "Monday",
+          "topic": "Orientation and Anatomical Terminology",
+          "focus": "Anatomical position, body planes, directional terms, body cavities, regional terms.",
+          "inClass": [
+            "Course orientation",
+            "Team formation",
+            "Mini-lecture: the language of anatomy",
+            "Readiness Assurance 1 (iRAT + tRAT)"
+          ],
+          "items": [
+            {
+              "id": "rat1",
+              "title": "Readiness Assurance 1 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-15",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on anatomical terminology."
+            }
+          ],
+          "nightly": [
+            "Read the syllabus and mark all 5 lab exam dates, the midterm, and the final in your planner.",
+            "Make flashcards for the directional terms: superior, inferior, medial, lateral, proximal, distal, anterior, posterior, superficial, deep.",
+            "Draw the body in anatomical position and label the three planes from memory."
+          ]
+        },
+        {
+          "date": "2026-06-16",
+          "weekday": "Tuesday",
+          "topic": "Epithelial Tissue",
+          "focus": "Classification of epithelia by shape and layers, glandular epithelium.",
+          "inClass": [
+            "Histology lab: epithelial slides",
+            "Team microscopy stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Pre-read the connective tissue section before tomorrow.",
+            "Build a table of epithelial types: shape, layers, and one location each.",
+            "Sketch simple squamous, stratified squamous, and pseudostratified epithelium from memory."
+          ]
+        },
+        {
+          "date": "2026-06-17",
+          "weekday": "Wednesday",
+          "topic": "Connective Tissue",
+          "focus": "Connective tissue proper, cartilage, bone, and blood as connective tissue.",
+          "inClass": [
+            "Histology lab: connective tissue identification",
+            "Application Activity: Tissue ID Challenge"
+          ],
+          "items": [
+            {
+              "id": "app1",
+              "title": "Application Activity: Tissue ID Challenge",
+              "type": "application",
+              "points": 15,
+              "due": "2026-06-17",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Quiz yourself: name the connective tissue found in 8 locations without looking.",
+            "Draw a labeled diagram of the four primary tissue types covered so far.",
+            "Pre-read the integumentary chapter, focus on the epidermal layers."
+          ]
+        },
+        {
+          "date": "2026-06-18",
+          "weekday": "Thursday",
+          "topic": "Integumentary System",
+          "focus": "Epidermal layers, dermis, accessory structures, surface markings.",
+          "inClass": [
+            "Integumentary models",
+            "Skin-layer drawing workshop"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a cross-section of skin from memory: label all epidermal layers, the dermis, and 3 accessory structures.",
+            "Build flashcards for the skin accessory structures: hair follicle, sebaceous gland, sweat gland, nail.",
+            "Preview Week 2: skim the bone tissue section."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "theme": "Skeletal System I: Bone and the Axial Skeleton",
+      "start": "2026-06-22",
+      "end": "2026-06-25",
+      "days": [
+        {
+          "date": "2026-06-22",
+          "weekday": "Monday",
+          "topic": "Bone Tissue and Bone Classification",
+          "focus": "Compact vs spongy bone, bone shapes, structure of a long bone, bone markings.",
+          "inClass": [
+            "Readiness Assurance 2 (iRAT + tRAT)",
+            "Bone model stations"
+          ],
+          "items": [
+            {
+              "id": "rat2",
+              "title": "Readiness Assurance 2 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-22",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on bone tissue."
+            }
+          ],
+          "nightly": [
+            "Draw a long bone in longitudinal section and label the diaphysis, epiphysis, and 6 internal structures.",
+            "Make flashcards for the bone markings: process, condyle, foramen, fossa, tubercle, trochanter.",
+            "Self-quiz: compact vs spongy bone and where each is found."
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "weekday": "Tuesday",
+          "topic": "Axial Skeleton: The Skull",
+          "focus": "Cranial and facial bones, sutures, major foramina, the bony orbit.",
+          "inClass": [
+            "Skull station rotation",
+            "Team identification drill"
+          ],
+          "items": [],
+          "nightly": [
+            "Label a blank skull diagram (lateral and anterior views) from memory.",
+            "Make flashcards for the 8 cranial and 14 facial bones.",
+            "List the bones that form the orbit and the nasal septum."
+          ]
+        },
+        {
+          "date": "2026-06-24",
+          "weekday": "Wednesday",
+          "topic": "Axial Skeleton: Vertebral Column and Thorax",
+          "focus": "Vertebral regions, intervertebral structure, ribs, sternum, spinal curvatures.",
+          "inClass": [
+            "Application Activity: Axial Skeleton Build"
+          ],
+          "items": [
+            {
+              "id": "app2",
+              "title": "Application Activity: Axial Skeleton Build",
+              "type": "application",
+              "points": 15,
+              "due": "2026-06-24",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw the vertebral column and label all five regions and both curvatures.",
+            "Compare a cervical, thoracic, and lumbar vertebra in a 3-column table.",
+            "Begin Lab Exam 1 review: re-walk every station topic from Weeks 1 and 2."
+          ]
+        },
+        {
+          "date": "2026-06-25",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 1",
+          "focus": "Practical exam: foundations, histology, integumentary, axial skeleton.",
+          "inClass": [
+            "Lab Practical Exam 1"
+          ],
+          "items": [
+            {
+              "id": "lab1",
+              "title": "Lab Exam 1",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-06-25",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Weeks 1 to 2: terminology, tissues, integument, axial skeleton."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 1 feedback once it posts.",
+            "Pre-read the upper limb section for tomorrow.",
+            "Reset your flashcard deck and retire the cards you have mastered."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "theme": "Skeletal System II: Appendicular Skeleton and Joints",
+      "start": "2026-06-29",
+      "end": "2026-07-02",
+      "days": [
+        {
+          "date": "2026-06-29",
+          "weekday": "Monday",
+          "topic": "Appendicular Skeleton: Upper Limb",
+          "focus": "Pectoral girdle, humerus, radius, ulna, carpals, metacarpals, phalanges.",
+          "inClass": [
+            "Readiness Assurance 3 (iRAT + tRAT)",
+            "Upper limb stations"
+          ],
+          "items": [
+            {
+              "id": "rat3",
+              "title": "Readiness Assurance 3 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-06-29",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on the appendicular skeleton."
+            }
+          ],
+          "nightly": [
+            "Label the bones of the upper limb and pectoral girdle from memory.",
+            "Make flashcards for the bony landmarks of the humerus, radius, and ulna.",
+            "Sketch the carpal bones in two rows and name each one."
+          ]
+        },
+        {
+          "date": "2026-06-30",
+          "weekday": "Tuesday",
+          "topic": "Appendicular Skeleton: Lower Limb",
+          "focus": "Pelvic girdle, femur, patella, tibia, fibula, tarsals, metatarsals, phalanges.",
+          "inClass": [
+            "Lower limb stations",
+            "Team identification drill"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the bones of the lower limb and pelvic girdle from memory.",
+            "Compare the male and female pelvis in a quick labeled sketch.",
+            "Self-quiz: the tarsal bones and the arches of the foot."
+          ]
+        },
+        {
+          "date": "2026-07-01",
+          "weekday": "Wednesday",
+          "topic": "Articulations (Joints)",
+          "focus": "Structural and functional joint classes, synovial joint anatomy, joint movements.",
+          "inClass": [
+            "Application Activity: Joint Classification"
+          ],
+          "items": [
+            {
+              "id": "app3",
+              "title": "Application Activity: Joint Classification",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-01",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Build a table of synovial joint types with one example and its movements for each.",
+            "Draw a synovial joint in cross-section and label 5 structures.",
+            "Lab Exam 2 review: re-walk every upper limb, lower limb, and joint station."
+          ]
+        },
+        {
+          "date": "2026-07-02",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 2",
+          "focus": "Practical exam: appendicular skeleton and joints.",
+          "inClass": [
+            "Lab Practical Exam 2"
+          ],
+          "items": [
+            {
+              "id": "lab2",
+              "title": "Lab Exam 2",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-02",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 3: appendicular skeleton and joints."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 2 feedback once it posts.",
+            "Pre-read the skeletal muscle organization section.",
+            "Update your flashcard deck before the muscular unit begins."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "theme": "Muscular System and Midterm",
+      "start": "2026-07-06",
+      "end": "2026-07-09",
+      "days": [
+        {
+          "date": "2026-07-06",
+          "weekday": "Monday",
+          "topic": "Skeletal Muscle Organization and Naming",
+          "focus": "Gross muscle structure, fascicle arrangement, muscle naming criteria, action vocabulary.",
+          "inClass": [
+            "Readiness Assurance 4 (iRAT + tRAT)",
+            "Muscle naming workshop"
+          ],
+          "items": [
+            {
+              "id": "rat4",
+              "title": "Readiness Assurance 4 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-06",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on skeletal muscle organization."
+            }
+          ],
+          "nightly": [
+            "Draw skeletal muscle from gross structure down to the fascicle and label each connective tissue layer.",
+            "Make flashcards for the muscle naming criteria with one example muscle each.",
+            "Self-quiz the action vocabulary: flexion, extension, abduction, adduction, rotation, circumduction."
+          ]
+        },
+        {
+          "date": "2026-07-07",
+          "weekday": "Tuesday",
+          "topic": "Muscles of the Head, Neck, and Trunk",
+          "focus": "Facial expression, mastication, neck, abdominal wall, and deep back muscles.",
+          "inClass": [
+            "Muscle identification stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the muscles of facial expression and mastication from memory.",
+            "Sketch the abdominal wall layers and name each muscle.",
+            "Make flashcards for the origin region and action of 10 trunk muscles."
+          ]
+        },
+        {
+          "date": "2026-07-08",
+          "weekday": "Wednesday",
+          "topic": "Muscles of the Limbs",
+          "focus": "Upper and lower limb muscle groups and compartments.",
+          "inClass": [
+            "Application Activity: Limb Muscle Map"
+          ],
+          "items": [
+            {
+              "id": "app4",
+              "title": "Application Activity: Limb Muscle Map",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-08",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Map the muscle compartments of the arm and leg in a labeled diagram.",
+            "Midterm review: build a one-page concept map of Weeks 1 to 4.",
+            "Re-test yourself on every flashcard deck from Weeks 1 to 4."
+          ]
+        },
+        {
+          "date": "2026-07-09",
+          "weekday": "Thursday",
+          "topic": "Midterm Exam",
+          "focus": "Comprehensive lecture and lab exam covering Weeks 1 to 4.",
+          "inClass": [
+            "Midterm Exam"
+          ],
+          "items": [
+            {
+              "id": "midterm",
+              "title": "Midterm Exam",
+              "type": "midterm",
+              "points": 160,
+              "due": "2026-07-09",
+              "slo": [
+                "SLO-1",
+                "SLO-2",
+                "SLO-3"
+              ],
+              "note": "Cumulative: foundations through the muscular system."
+            }
+          ],
+          "nightly": [
+            "Light night: rest, and review your midterm feedback once it posts.",
+            "Pre-read the nervous tissue section.",
+            "Note any topics from the midterm that you want to revisit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "theme": "Nervous System I: Tissue and Central Nervous System",
+      "start": "2026-07-13",
+      "end": "2026-07-16",
+      "days": [
+        {
+          "date": "2026-07-13",
+          "weekday": "Monday",
+          "topic": "Nervous Tissue",
+          "focus": "Neuron structure, neuroglia of the CNS and PNS, gray vs white matter.",
+          "inClass": [
+            "Readiness Assurance 5 (iRAT + tRAT)",
+            "Histology of nervous tissue"
+          ],
+          "items": [
+            {
+              "id": "rat5",
+              "title": "Readiness Assurance 5 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-13",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on nervous tissue."
+            }
+          ],
+          "nightly": [
+            "Draw a multipolar neuron and label every structure plus the direction of signal travel.",
+            "Make flashcards for the neuroglia of the CNS and the PNS.",
+            "Self-quiz: gray matter vs white matter, location and composition."
+          ]
+        },
+        {
+          "date": "2026-07-14",
+          "weekday": "Tuesday",
+          "topic": "Spinal Cord and Spinal Nerves",
+          "focus": "Spinal cord cross-section, meninges, spinal nerves, plexuses, reflex arc anatomy.",
+          "inClass": [
+            "Spinal cord models",
+            "Plexus tracing stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a spinal cord cross-section and label the horns, columns, roots, and meninges.",
+            "Map the four major nerve plexuses and name one nerve from each.",
+            "Make flashcards for the components of a reflex arc."
+          ]
+        },
+        {
+          "date": "2026-07-15",
+          "weekday": "Wednesday",
+          "topic": "The Brain",
+          "focus": "Cerebrum, diencephalon, brainstem, cerebellum, ventricular system.",
+          "inClass": [
+            "Application Activity: Brain Atlas Build"
+          ],
+          "items": [
+            {
+              "id": "app5",
+              "title": "Application Activity: Brain Atlas Build",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-15",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Label a midsagittal brain diagram from memory.",
+            "Make flashcards for the four ventricles and the lobes of the cerebrum.",
+            "Lab Exam 3 review: re-walk the muscular and nervous tissue / CNS stations."
+          ]
+        },
+        {
+          "date": "2026-07-16",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 3",
+          "focus": "Practical exam: muscular system, nervous tissue, and the central nervous system.",
+          "inClass": [
+            "Lab Practical Exam 3"
+          ],
+          "items": [
+            {
+              "id": "lab3",
+              "title": "Lab Exam 3",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-16",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Weeks 4 to 5: muscular system and central nervous system."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 3 feedback once it posts.",
+            "Pre-read the cranial nerves section.",
+            "Refresh your flashcard deck before the special senses unit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 6,
+      "theme": "Nervous System II: Peripheral Pathways and Special Senses",
+      "start": "2026-07-20",
+      "end": "2026-07-23",
+      "days": [
+        {
+          "date": "2026-07-20",
+          "weekday": "Monday",
+          "topic": "Cranial Nerves and the Autonomic Nervous System",
+          "focus": "The 12 cranial nerves; structural pathways of the sympathetic and parasympathetic divisions.",
+          "inClass": [
+            "Readiness Assurance 6 (iRAT + tRAT)",
+            "Cranial nerve stations"
+          ],
+          "items": [
+            {
+              "id": "rat6",
+              "title": "Readiness Assurance 6 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-20",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on cranial nerves and the ANS."
+            }
+          ],
+          "nightly": [
+            "Make flashcards for all 12 cranial nerves: name, number, and sensory / motor / both.",
+            "Draw the sympathetic and parasympathetic pathways structurally.",
+            "Use a mnemonic to lock in cranial nerve order, then test yourself on a blank list."
+          ]
+        },
+        {
+          "date": "2026-07-21",
+          "weekday": "Tuesday",
+          "topic": "Special Senses: Eye and Ear",
+          "focus": "Gross and internal anatomy of the eye and the ear.",
+          "inClass": [
+            "Eye and ear models",
+            "Dissection demonstration"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the eye and the ear in cross-section from memory.",
+            "Make flashcards for the structures light passes through and the structures sound passes through.",
+            "List the accessory structures of the eye."
+          ]
+        },
+        {
+          "date": "2026-07-22",
+          "weekday": "Wednesday",
+          "topic": "Endocrine Glands (Anatomy)",
+          "focus": "Location and gross anatomy of the major endocrine glands.",
+          "inClass": [
+            "Application Activity: Endocrine Gland Locator"
+          ],
+          "items": [
+            {
+              "id": "app6",
+              "title": "Application Activity: Endocrine Gland Locator",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-22",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw a body outline and place every endocrine gland in its correct location.",
+            "Make flashcards for the gross appearance and location of 8 endocrine glands.",
+            "Lab Exam 4 review: re-walk the brain, cranial nerve, senses, and endocrine stations."
+          ]
+        },
+        {
+          "date": "2026-07-23",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 4",
+          "focus": "Practical exam: brain, cranial nerves, special senses, and endocrine glands.",
+          "inClass": [
+            "Lab Practical Exam 4"
+          ],
+          "items": [
+            {
+              "id": "lab4",
+              "title": "Lab Exam 4",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-23",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 6: peripheral nervous system, senses, and endocrine anatomy."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 4 feedback once it posts.",
+            "Pre-read the heart anatomy section.",
+            "Reset your flashcard deck for the cardiovascular unit."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 7,
+      "theme": "Cardiovascular, Lymphatic, and Respiratory Systems",
+      "start": "2026-07-27",
+      "end": "2026-07-30",
+      "days": [
+        {
+          "date": "2026-07-27",
+          "weekday": "Monday",
+          "topic": "The Heart",
+          "focus": "Chambers, valves, great vessels, and coronary circulation anatomy.",
+          "inClass": [
+            "Readiness Assurance 7 (iRAT + tRAT)",
+            "Heart models and dissection"
+          ],
+          "items": [
+            {
+              "id": "rat7",
+              "title": "Readiness Assurance 7 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-07-27",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on heart anatomy."
+            }
+          ],
+          "nightly": [
+            "Draw the heart and label all four chambers, all four valves, and the great vessels.",
+            "Trace a drop of blood through the heart and label the coronary vessels.",
+            "Make flashcards for the heart valves and what each one separates."
+          ]
+        },
+        {
+          "date": "2026-07-28",
+          "weekday": "Tuesday",
+          "topic": "Blood Vessels",
+          "focus": "Major arteries and veins, structure of the three vessel wall types.",
+          "inClass": [
+            "Vascular pathway stations"
+          ],
+          "items": [],
+          "nightly": [
+            "Label the major arteries and veins on a body outline from memory.",
+            "Compare the three vessel wall layers in a quick table.",
+            "Trace blood from the heart to the hand and back."
+          ]
+        },
+        {
+          "date": "2026-07-29",
+          "weekday": "Wednesday",
+          "topic": "Lymphatic and Respiratory Systems",
+          "focus": "Lymphatic vessels and organs; respiratory tract anatomy.",
+          "inClass": [
+            "Application Activity: Circulatory and Airway Trace"
+          ],
+          "items": [
+            {
+              "id": "app7",
+              "title": "Application Activity: Circulatory and Airway Trace",
+              "type": "application",
+              "points": 15,
+              "due": "2026-07-29",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Draw the respiratory tract from nose to alveolus and label each structure.",
+            "Map the lymphatic organs on a body outline.",
+            "Lab Exam 5 review: re-walk the heart, vessel, lymphatic, and respiratory stations."
+          ]
+        },
+        {
+          "date": "2026-07-30",
+          "weekday": "Thursday",
+          "topic": "Lab Exam 5",
+          "focus": "Practical exam: cardiovascular, lymphatic, and respiratory systems.",
+          "inClass": [
+            "Lab Practical Exam 5"
+          ],
+          "items": [
+            {
+              "id": "lab5",
+              "title": "Lab Exam 5",
+              "type": "lab-exam",
+              "points": 80,
+              "due": "2026-07-30",
+              "slo": [
+                "SLO-1",
+                "SLO-2"
+              ],
+              "note": "Covers Week 7: cardiovascular, lymphatic, and respiratory systems."
+            }
+          ],
+          "nightly": [
+            "Light night: review your Lab Exam 5 feedback once it posts.",
+            "Pre-read the digestive system section.",
+            "Begin a cumulative review list for the final exam."
+          ]
+        }
+      ]
+    },
+    {
+      "week": 8,
+      "theme": "Viscera and Synthesis",
+      "start": "2026-08-03",
+      "end": "2026-08-06",
+      "days": [
+        {
+          "date": "2026-08-03",
+          "weekday": "Monday",
+          "topic": "Digestive System",
+          "focus": "Gastrointestinal tract and accessory digestive organs anatomy.",
+          "inClass": [
+            "Readiness Assurance 8 (iRAT + tRAT)",
+            "Digestive system models"
+          ],
+          "items": [
+            {
+              "id": "rat8",
+              "title": "Readiness Assurance 8 (iRAT + tRAT)",
+              "type": "rat",
+              "points": 15,
+              "due": "2026-08-03",
+              "slo": [
+                "SLO-1"
+              ],
+              "note": "Covers pre-class reading on the digestive system."
+            }
+          ],
+          "nightly": [
+            "Draw the digestive tract and label the accessory organs.",
+            "Make flashcards for the layers of the GI tract wall and the accessory organs.",
+            "Add this week's topics to your final exam review list."
+          ]
+        },
+        {
+          "date": "2026-08-04",
+          "weekday": "Tuesday",
+          "topic": "Urinary System",
+          "focus": "Kidney gross and internal anatomy, ureters, bladder, urethra.",
+          "inClass": [
+            "Kidney dissection"
+          ],
+          "items": [],
+          "nightly": [
+            "Draw a kidney in frontal section and label the internal anatomy.",
+            "Trace the path of urine from the glomerulus to the urethra.",
+            "Final review: rebuild your concept map for Weeks 5 to 7."
+          ]
+        },
+        {
+          "date": "2026-08-05",
+          "weekday": "Wednesday",
+          "topic": "Reproductive Systems",
+          "focus": "Male and female reproductive system anatomy.",
+          "inClass": [
+            "Application Activity: Viscera Synthesis"
+          ],
+          "items": [
+            {
+              "id": "app8",
+              "title": "Application Activity: Viscera Synthesis",
+              "type": "application",
+              "points": 15,
+              "due": "2026-08-05",
+              "slo": [
+                "SLO-3",
+                "SLO-4"
+              ],
+              "note": "Team 4S activity, completed and submitted in class."
+            }
+          ],
+          "nightly": [
+            "Label the male and female reproductive systems from memory.",
+            "Final review: re-test every flashcard deck and retire what you have mastered.",
+            "Walk every lab station topic from the whole course one more time."
+          ]
+        },
+        {
+          "date": "2026-08-06",
+          "weekday": "Thursday",
+          "topic": "Final Exam",
+          "focus": "Comprehensive lecture and lab exam covering the entire course.",
+          "inClass": [
+            "Comprehensive Final Exam"
+          ],
+          "items": [
+            {
+              "id": "final",
+              "title": "Final Exam",
+              "type": "final",
+              "points": 200,
+              "due": "2026-08-06",
+              "slo": [
+                "SLO-1",
+                "SLO-2",
+                "SLO-3",
+                "SLO-4",
+                "SLO-5"
+              ],
+              "note": "Cumulative: all systems, lecture and lab."
+            }
+          ],
+          "nightly": [
+            "You made it. Rest well before the final.",
+            "Light review only: skim your concept maps, do not cram.",
+            "Bring your student ID and arrive early."
+          ]
+        }
+      ]
+    }
+  ],
+  "spacedRepetition": {
+    "intervalsDays": [
+      1,
+      3,
+      8,
+      21
+    ],
+    "note": "Review offsets, in days, after a topic is first taught."
+  }
+}
+</script>
+
+<script>
+/* ============================================================
+   COURSE SCHEDULE ENGINE, browser runtime.
+   Reads the JSON above and renders four views, plus exports.
+   No external libraries, no network calls, no stored data.
+   ============================================================ */
+(function(){
+  "use strict";
+
+  var DATA = JSON.parse(document.getElementById("schedule-data").textContent);
+  var COURSE = DATA.course;
+  var WEEKS = DATA.weeks;
+  var TYPES = COURSE.itemTypes || {};
+  var EXAM_TYPES = { "lab-exam":1, "midterm":1, "final":1 };
+
+  /* ---- Date helpers, all local time, no timezone drift ---- */
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var MONTHS_LONG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  function parseISO(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function toISO(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function addDays(iso, n){ var d = parseISO(iso); d.setDate(d.getDate()+n); return toISO(d); }
+  function dayDiff(isoA, isoB){
+    return Math.round((parseISO(isoB) - parseISO(isoA)) / 86400000);
+  }
+  function fmtShort(iso){ var d = parseISO(iso); return WD[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate(); }
+  function fmtLong(iso){ var d = parseISO(iso); return MONTHS_LONG[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); }
+  function fmtRange(a, b){
+    var da = parseISO(a), db = parseISO(b);
+    if(da.getMonth() === db.getMonth()){
+      return MONTHS[da.getMonth()] + " " + da.getDate() + " to " + db.getDate();
+    }
+    return MONTHS[da.getMonth()] + " " + da.getDate() + " to " + MONTHS[db.getMonth()] + " " + db.getDate();
+  }
+  function todayISO(){ var d = new Date(); return toISO(d); }
+
+  /* ---- Flatten data for convenience ---- */
+  var ALL_DAYS = [];
+  var ALL_ITEMS = [];
+  WEEKS.forEach(function(w){
+    w.days.forEach(function(day){
+      var rec = { week:w.week, weekTheme:w.theme, day:day };
+      ALL_DAYS.push(rec);
+      (day.items || []).forEach(function(it){
+        ALL_ITEMS.push({ item:it, date:day.date, week:w.week, weekTheme:w.theme, topic:day.topic });
+      });
+    });
+  });
+  ALL_ITEMS.sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+
+  var TOTAL_POINTS = ALL_ITEMS.reduce(function(s,r){ return s + (r.item.points||0); }, 0);
+  var EXAM_COUNT = ALL_ITEMS.filter(function(r){ return EXAM_TYPES[r.item.type]; }).length;
+  var COURSE_START = WEEKS[0].start;
+  var COURSE_END = WEEKS[WEEKS.length-1].end;
+
+  /* ---- State ---- */
+  var state = { view:"thisweek", nightly:true, weekIndex:0 };
+
+  /* ---- Small HTML helpers ---- */
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function isExam(it){ return !!EXAM_TYPES[it.type]; }
+  function typeLabel(it){ return TYPES[it.type] || it.type; }
+
+  /* ---- Day state relative to today ---- */
+  function dayState(iso){
+    var t = todayISO();
+    if(iso < t) return "past";
+    if(iso === t) return "today";
+    return "future";
+  }
+
+  /* ---- Render: one graded item ---- */
+  function itemHTML(it){
+    var exam = isExam(it);
+    var slo = (it.slo||[]).join(", ");
+    var meta = '<span class="gi-due">Due ' + esc(fmtShort(it.due)) + '</span>'
+             + '<span class="gi-points">' + esc(it.points) + ' pts</span>'
+             + (slo ? '<span class="gi-slo">' + esc(slo) + '</span>' : '');
+    return '<div class="graded-item' + (exam ? ' exam' : '') + '">'
+      + '<div class="gi-top">'
+      + '<span class="gi-type ' + (exam ? 'type-exam' : 'type-graded') + '">' + esc(typeLabel(it)) + '</span>'
+      + '<span class="gi-title">' + esc(it.title) + '</span>'
+      + '</div>'
+      + '<div class="gi-meta">' + meta + '</div>'
+      + (it.note ? '<p class="gi-note">' + esc(it.note) + '</p>' : '')
+      + '</div>';
+  }
+
+  /* ---- Render: one day card ---- */
+  function dayCardHTML(day, headingLevel){
+    var hasExam = (day.items||[]).some(isExam);
+    var st = dayState(day.date);
+    var cls = "day-card";
+    if(hasExam) cls += " is-exam";
+    if(st === "today") cls += " is-today";
+    else if(st === "past") cls += " is-past";
+
+    var tag = "";
+    if(st === "today") tag = '<span class="day-state-tag tag-today">Today</span>';
+    else if(st === "past") tag = '<span class="day-state-tag tag-done">Done</span>';
+
+    var hl = headingLevel || "h4";
+
+    var inClass = "";
+    if(day.inClass && day.inClass.length){
+      inClass = '<p class="day-section-label">In class</p><div class="chip-row">'
+        + day.inClass.map(function(c){ return '<span class="chip">' + esc(c) + '</span>'; }).join("")
+        + '</div>';
+    }
+
+    var graded = "";
+    if(day.items && day.items.length){
+      graded = '<p class="day-section-label">Graded, counts for points</p>'
+        + '<div class="graded-list">' + day.items.map(itemHTML).join("") + '</div>';
+    }
+
+    var nightly = "";
+    if(state.nightly && day.nightly && day.nightly.length){
+      nightly = '<div class="nightly">'
+        + '<p class="nightly-intro">Recommended tonight, not graded. A good place to start.</p>'
+        + '<ul>' + day.nightly.map(function(n){ return '<li>' + esc(n) + '</li>'; }).join("") + '</ul>'
+        + '</div>';
+    }
+
+    return '<article class="' + cls + '" aria-label="' + esc(day.weekday + " " + fmtShort(day.date) + ", " + day.topic) + '">'
+      + '<div class="day-head">'
+      + '<span class="day-date">' + esc(day.weekday) + ' &middot; ' + esc(fmtShort(day.date)) + '</span>'
+      + tag + '</div>'
+      + '<' + hl + ' class="day-topic">' + esc(day.topic) + '</' + hl + '>'
+      + (day.focus ? '<p class="day-focus">' + esc(day.focus) + '</p>' : '')
+      + inClass + graded + nightly
+      + '</article>';
+  }
+
+  /* ---- Render: a full week block ---- */
+  function weekBlockHTML(w, dayHeading){
+    var days = w.days.map(function(d){ return dayCardHTML(d, dayHeading); }).join("");
+    return '<section class="week-block">'
+      + '<h3 class="week-head">Week ' + w.week + ': ' + esc(w.theme) + '</h3>'
+      + '<p class="week-dates">' + esc(fmtRange(w.start, w.end)) + '</p>'
+      + '<div class="day-grid">' + days + '</div>'
+      + '</section>';
+  }
+
+  /* ---- VIEW: full schedule ---- */
+  function renderFull(){
+    var blocks = WEEKS.map(function(w){ return weekBlockHTML(w, "h4"); }).join("");
+    return '<h2 class="view-head" id="view-heading" tabindex="-1">Full Course Schedule</h2>'
+      + '<p class="view-sub">All ' + WEEKS.length + ' weeks. ' + ALL_ITEMS.length + ' graded items, ' + TOTAL_POINTS + ' points total.</p>'
+      + blocks;
+  }
+
+  /* ---- VIEW: weekly ---- */
+  function renderWeekly(){
+    var i = state.weekIndex;
+    if(i < 0) i = 0;
+    if(i > WEEKS.length-1) i = WEEKS.length-1;
+    state.weekIndex = i;
+    var w = WEEKS[i];
+
+    var options = WEEKS.map(function(ww, idx){
+      return '<option value="' + idx + '"' + (idx===i?' selected':'') + '>Week ' + ww.week + ': ' + esc(ww.theme) + '</option>';
+    }).join("");
+
+    var nav = '<div class="week-nav">'
+      + '<button type="button" class="btn btn-secondary" id="wk-prev"' + (i===0?' disabled':'') + '>Previous week</button>'
+      + '<label class="sr-only" for="wk-picker">Jump to a week</label>'
+      + '<select class="picker" id="wk-picker">' + options + '</select>'
+      + '<button type="button" class="btn btn-secondary" id="wk-next"' + (i===WEEKS.length-1?' disabled':'') + '>Next week</button>'
+      + '</div>';
+
+    var days = w.days.map(function(d){ return dayCardHTML(d, "h3"); }).join("");
+    var wkItems = w.days.reduce(function(s,d){ return s + (d.items?d.items.length:0); }, 0);
+    var wkPts = w.days.reduce(function(s,d){ return s + (d.items||[]).reduce(function(a,it){return a+it.points;},0); }, 0);
+
+    return '<h2 class="view-head" id="view-heading" tabindex="-1">Week ' + w.week + ': ' + esc(w.theme) + '</h2>'
+      + '<p class="view-sub">' + esc(fmtRange(w.start, w.end)) + '. ' + wkItems + ' graded item' + (wkItems===1?'':'s') + ' this week, ' + wkPts + ' points.</p>'
+      + nav
+      + '<div class="day-grid">' + days + '</div>';
+  }
+
+  /* ---- VIEW: this week / due now ---- */
+  function findContext(){
+    var t = todayISO();
+    if(t < COURSE_START) return { state:"before", until:dayDiff(t, COURSE_START) };
+    if(t > COURSE_END) return { state:"after" };
+    for(var i=0;i<WEEKS.length;i++){
+      if(t >= WEEKS[i].start && t <= WEEKS[i].end) return { state:"during", weekIndex:i };
+    }
+    /* In a gap between weeks, point at the next week. */
+    for(var j=0;j<WEEKS.length;j++){
+      if(WEEKS[j].start > t) return { state:"gap", weekIndex:j };
+    }
+    return { state:"after" };
+  }
+
+  function dueWindowHTML(fromISO, toISO_){
+    var rows = ALL_ITEMS.filter(function(r){ return r.date >= fromISO && r.date <= toISO_; });
+    if(!rows.length) return '<p>No graded items are due in this window.</p>';
+    return '<ul>' + rows.map(function(r){
+      return '<li><strong>' + esc(fmtShort(r.date)) + ':</strong> ' + esc(r.item.title)
+        + ' (' + r.item.points + ' pts)</li>';
+    }).join("") + '</ul>';
+  }
+
+  function renderThisWeek(){
+    var ctx = findContext();
+    var t = todayISO();
+    var html = '<h2 class="view-head" id="view-heading" tabindex="-1">This Week</h2>';
+
+    if(ctx.state === "before"){
+      var firstWeek = WEEKS[0];
+      html += '<p class="view-sub">A focused view of what to do right now.</p>'
+        + '<div class="tw-banner">'
+        + '<h3>' + COURSE.code + ' starts in ' + ctx.until + ' day' + (ctx.until===1?'':'s') + '</h3>'
+        + '<p>First class meeting is ' + esc(fmtLong(COURSE_START)) + '. Here is the whole course at a glance, and what Week 1 looks like.</p>'
+        + '<div class="tw-stats">'
+        + '<span class="tw-stat"><span class="num">' + WEEKS.length + '</span><span class="lbl">Weeks</span></span>'
+        + '<span class="tw-stat"><span class="num">' + ALL_ITEMS.length + '</span><span class="lbl">Graded items</span></span>'
+        + '<span class="tw-stat"><span class="num">' + EXAM_COUNT + '</span><span class="lbl">Exams</span></span>'
+        + '<span class="tw-stat"><span class="num">' + TOTAL_POINTS + '</span><span class="lbl">Total points</span></span>'
+        + '</div>'
+        + '<div class="due-soon"><h4>Get a head start</h4>'
+        + '<ul><li>Open the Full schedule view and add every exam date to your calendar.</li>'
+        + '<li>Use the export panel above to send due dates to your calendar and planner.</li>'
+        + '<li>Turn on nightly tasks below each day to see exactly where to begin.</li></ul></div>'
+        + '</div>'
+        + '<section class="week-block">'
+        + '<h3 class="week-head">Coming up, Week 1: ' + esc(firstWeek.theme) + '</h3>'
+        + '<p class="week-dates">' + esc(fmtRange(firstWeek.start, firstWeek.end)) + '</p>'
+        + '<div class="day-grid">' + firstWeek.days.map(function(d){ return dayCardHTML(d,"h4"); }).join("") + '</div>'
+        + '</section>';
+      return html;
+    }
+
+    if(ctx.state === "after"){
+      html += '<p class="view-sub">The course is complete.</p>'
+        + '<div class="tw-banner">'
+        + '<h3>' + COURSE.code + ' is complete</h3>'
+        + '<p>The last scheduled day was ' + esc(fmtLong(COURSE_END)) + '. Switch to the Full schedule or Graded items view to review the term.</p>'
+        + '</div>';
+      return html;
+    }
+
+    /* during or gap, show the active or upcoming week */
+    var wi = ctx.weekIndex;
+    var w = WEEKS[wi];
+    var elapsed = dayDiff(COURSE_START, t);
+    var span = dayDiff(COURSE_START, COURSE_END);
+    var pct = Math.max(0, Math.min(100, Math.round((elapsed / span) * 100)));
+
+    var bannerTitle = ctx.state === "gap"
+      ? "Week " + w.week + " starts " + fmtShort(w.start)
+      : "Week " + w.week + " of " + WEEKS.length;
+
+    html += '<p class="view-sub">A focused view of what to do right now.</p>'
+      + '<div class="tw-banner">'
+      + '<h3>' + esc(bannerTitle) + ': ' + esc(w.theme) + '</h3>'
+      + '<p>Today is ' + esc(fmtLong(t)) + '.</p>'
+      + '<div class="progress-track" role="img" aria-label="Course progress, about ' + pct + ' percent of the term elapsed">'
+      + '<div class="progress-fill" style="width:' + pct + '%"></div></div>'
+      + '<p style="font-size:0.85rem;color:var(--gray);margin:4px 0 0;">About ' + pct + '% of the term has elapsed.</p>'
+      + '<div class="due-soon"><h4>Due this week</h4>'
+      + dueWindowHTML(w.start, w.end)
+      + '</div>'
+      + '<div class="due-soon"><h4>Due in the next 7 days</h4>'
+      + dueWindowHTML(t, addDays(t,7))
+      + '</div>'
+      + '</div>';
+
+    html += '<div class="day-grid">' + w.days.map(function(d){ return dayCardHTML(d,"h3"); }).join("") + '</div>';
+
+    /* Offer a peek at next week */
+    if(wi < WEEKS.length-1){
+      var nw = WEEKS[wi+1];
+      html += '<section class="week-block">'
+        + '<h3 class="week-head">Looking ahead, Week ' + nw.week + ': ' + esc(nw.theme) + '</h3>'
+        + '<p class="week-dates">' + esc(fmtRange(nw.start, nw.end)) + '</p>'
+        + '<div class="day-grid">' + nw.days.map(function(d){ return dayCardHTML(d,"h4"); }).join("") + '</div>'
+        + '</section>';
+    }
+    return html;
+  }
+
+  /* ---- VIEW: graded items ---- */
+  function renderGraded(){
+    var running = 0;
+    var rows = ALL_ITEMS.map(function(r){
+      running += r.item.points;
+      var exam = isExam(r.item);
+      var st = dayState(r.date);
+      return '<tr class="' + (exam?'exam-row':'') + '">'
+        + '<td><strong>' + esc(fmtShort(r.date)) + '</strong></td>'
+        + '<td>' + esc(r.item.title) + '</td>'
+        + '<td>' + esc(typeLabel(r.item)) + '</td>'
+        + '<td class="num">' + r.item.points + '</td>'
+        + '<td class="num">' + running + '</td>'
+        + '<td>' + esc((r.item.slo||[]).join(", ")) + '</td>'
+        + '<td>Week ' + r.week + '</td>'
+        + '</tr>';
+    }).join("");
+
+    var table = '<div class="table-scroll"><table class="graded-table">'
+      + '<caption>Every item that counts for points, in due-date order. The running total shows points available to date.</caption>'
+      + '<thead><tr>'
+      + '<th scope="col">Due date</th><th scope="col">Item</th><th scope="col">Type</th>'
+      + '<th scope="col">Points</th><th scope="col">Running total</th><th scope="col">SLOs</th><th scope="col">Week</th>'
+      + '</tr></thead>'
+      + '<tbody>' + rows + '</tbody>'
+      + '<tfoot><tr><td colspan="3">Course total</td><td class="num">' + TOTAL_POINTS + '</td><td colspan="3"></td></tr></tfoot>'
+      + '</table></div>';
+
+    var legend = '<div class="legend">'
+      + '<span><span class="sw sw-exam" aria-hidden="true"></span> Exam, gold marker</span>'
+      + '<span><span class="sw sw-graded" aria-hidden="true"></span> Graded item</span>'
+      + '<span><span class="sw sw-today" aria-hidden="true"></span> Today, gold edge on day cards</span>'
+      + '<span><span class="sw sw-done" aria-hidden="true"></span> Completed day, navy tint</span>'
+      + '</div>';
+
+    return '<h2 class="view-head" id="view-heading" tabindex="-1">Graded Items and Due Dates</h2>'
+      + '<p class="view-sub">' + ALL_ITEMS.length + ' graded items, ' + EXAM_COUNT + ' exams, ' + TOTAL_POINTS + ' points total.</p>'
+      + table + legend;
+  }
+
+  /* ---- Master render ---- */
+  function render(){
+    var region = document.getElementById("schedule-region");
+    var html, statusMsg;
+    if(state.view === "full"){ html = renderFull(); statusMsg = "Full schedule, all " + WEEKS.length + " weeks."; }
+    else if(state.view === "weekly"){ html = renderWeekly(); statusMsg = "Weekly view, Week " + WEEKS[state.weekIndex].week + "."; }
+    else if(state.view === "graded"){ html = renderGraded(); statusMsg = "Graded items, " + ALL_ITEMS.length + " items due."; }
+    else { html = renderThisWeek(); statusMsg = "This week view."; }
+    region.innerHTML = html;
+    document.getElementById("status-line").textContent = statusMsg
+      + (state.nightly ? " Nightly tasks shown." : " Nightly tasks hidden.");
+    wireDynamic();
+  }
+
+  /* ---- Wire controls that live inside re-rendered content ---- */
+  function wireDynamic(){
+    var prev = document.getElementById("wk-prev");
+    var next = document.getElementById("wk-next");
+    var picker = document.getElementById("wk-picker");
+    if(prev) prev.addEventListener("click", function(){ state.weekIndex--; render(); focusHeading(); });
+    if(next) next.addEventListener("click", function(){ state.weekIndex++; render(); focusHeading(); });
+    if(picker) picker.addEventListener("change", function(){ state.weekIndex = +picker.value; render(); focusHeading(); });
+  }
+  function focusHeading(){
+    var h = document.getElementById("view-heading");
+    if(h) h.focus();
+  }
+
+  /* =========================================================
+     EXPORT GENERATORS
+     ========================================================= */
+
+  /* CSV field escaping */
+  function csvCell(v){
+    v = (v == null) ? "" : String(v);
+    if(/[",\r\n]/.test(v)) return '"' + v.replace(/"/g,'""') + '"';
+    return v;
+  }
+  function csvRow(arr){ return arr.map(csvCell).join(","); }
+
+  /* --- Calendar, .ics --- */
+  function icsEscape(s){
+    return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n");
+  }
+  function icsFold(line){
+    if(line.length <= 73) return line;
+    var out = "", i = 0;
+    while(i < line.length){
+      var chunk = line.substring(i, i + (i===0?73:72));
+      out += (i===0 ? "" : "\r\n ") + chunk;
+      i += (i===0?73:72);
+    }
+    return out;
+  }
+  function nowStamp(){
+    var d = new Date();
+    function p(n){ return String(n).padStart(2,"0"); }
+    return d.getUTCFullYear()+p(d.getUTCMonth()+1)+p(d.getUTCDate())+"T"
+      +p(d.getUTCHours())+p(d.getUTCMinutes())+p(d.getUTCSeconds())+"Z";
+  }
+  function generateICS(){
+    var L = ["BEGIN:VCALENDAR","VERSION:2.0",
+      "PRODID:-//MedMasters Collaborative//Course Schedule Engine//EN",
+      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      "X-WR-CALNAME:" + icsEscape(COURSE.code + " " + COURSE.title + " due dates")];
+    var stamp = nowStamp();
+    ALL_ITEMS.forEach(function(r){
+      var it = r.item;
+      var d = it.due.replace(/-/g,"");
+      var dEnd = addDays(it.due,1).replace(/-/g,"");
+      var desc = typeLabel(it) + ". Worth " + it.points + " points. "
+        + (it.note ? it.note + " " : "") + "SLOs: " + (it.slo||[]).join(", ") + ".";
+      L.push("BEGIN:VEVENT");
+      L.push("UID:" + it.id + "-" + d + "@course-schedule-engine");
+      L.push("DTSTAMP:" + stamp);
+      L.push("DTSTART;VALUE=DATE:" + d);
+      L.push("DTEND;VALUE=DATE:" + dEnd);
+      L.push(icsFold("SUMMARY:" + icsEscape(COURSE.code + ": " + it.title + " (" + it.points + " pts)")));
+      L.push(icsFold("DESCRIPTION:" + icsEscape(desc)));
+      L.push("CATEGORIES:" + icsEscape(typeLabel(it)));
+      L.push("TRANSP:TRANSPARENT");
+      if(isExam(it)){
+        L.push("BEGIN:VALARM");
+        L.push("ACTION:DISPLAY");
+        L.push("TRIGGER:-P1D");
+        L.push(icsFold("DESCRIPTION:" + icsEscape("Tomorrow: " + it.title)));
+        L.push("END:VALARM");
+      }
+      L.push("END:VEVENT");
+    });
+    L.push("END:VCALENDAR");
+    return L.join("\r\n");
+  }
+
+  /* --- Spaced repetition, Anki CSV --- */
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+  function generateAnkiCSV(){
+    var L = ["#separator:Comma","#html:false","#columns:Front Back Deck Tags"];
+    WEEKS.forEach(function(w){
+      var deck = COURSE.code.replace(/\s+/g,"") + "::Week " + w.week + " " + w.theme.replace(/:/g," ");
+      w.days.forEach(function(day){
+        if((day.items||[]).some(isExam)) return; /* skip exam days, they are review, not new content */
+        var front = "Describe the anatomy of: " + day.topic;
+        var back = day.focus || "";
+        var tags = "BIO004 week" + w.week + " " + slug(day.topic);
+        L.push(csvRow([front, back, deck, tags]));
+      });
+    });
+    return L.join("\n");
+  }
+
+  /* --- Nightly study plan, text, date indexed, with spaced reviews --- */
+  function generateStudyPlan(){
+    var intervals = (DATA.spacedRepetition && DATA.spacedRepetition.intervalsDays) || [1,3,8,21];
+    /* Build a map of date -> list of topics to review that night */
+    var reviewByDate = {};
+    WEEKS.forEach(function(w){
+      w.days.forEach(function(day){
+        if(day.topic.indexOf("Exam") === 0) return;
+        intervals.forEach(function(off){
+          var rd = addDays(day.date, off);
+          if(rd > COURSE_END) return;
+          (reviewByDate[rd] = reviewByDate[rd] || []).push(day.topic);
+        });
+      });
+    });
+
+    var L = [];
+    L.push(COURSE.code + " " + COURSE.title + ", Nightly Study Plan");
+    L.push(COURSE.term + ". Prepared by Dr. Sharilyn Rennie.");
+    L.push("Recommended tasks are not graded. Spaced reviews use offsets of " + intervals.join(", ") + " days.");
+    L.push("Paste this into any planner or spaced-repetition app.");
+    L.push("");
+    WEEKS.forEach(function(w){
+      L.push("==============================");
+      L.push("WEEK " + w.week + ": " + w.theme + "  (" + fmtRange(w.start,w.end) + ")");
+      L.push("==============================");
+      w.days.forEach(function(day){
+        L.push("");
+        L.push(day.weekday + ", " + fmtLong(day.date) + "  ::  " + day.topic);
+        (day.items||[]).forEach(function(it){
+          L.push("  GRADED, due today: " + it.title + " (" + it.points + " pts)");
+        });
+        L.push("  Recommended tonight:");
+        (day.nightly||[]).forEach(function(n){ L.push("    [ ] " + n); });
+        var rev = reviewByDate[day.date];
+        if(rev && rev.length){
+          var uniq = rev.filter(function(v,i){ return rev.indexOf(v)===i; });
+          L.push("  Spaced review tonight:");
+          uniq.forEach(function(tp){ L.push("    [ ] Re-test yourself on: " + tp); });
+        }
+      });
+      L.push("");
+    });
+    return L.join("\n");
+  }
+
+  /* --- Planner checklist, Markdown --- */
+  function generateChecklist(){
+    var L = [];
+    L.push("# " + COURSE.code + " " + COURSE.title + ", Course Checklist");
+    L.push("");
+    L.push("_" + COURSE.term + ". " + ALL_ITEMS.length + " graded items, " + TOTAL_POINTS + " points. Prepared by Dr. Sharilyn Rennie._");
+    L.push("");
+    WEEKS.forEach(function(w){
+      L.push("## Week " + w.week + ": " + w.theme + "  (" + fmtRange(w.start,w.end) + ")");
+      L.push("");
+      w.days.forEach(function(day){
+        L.push("### " + fmtShort(day.date) + ", " + day.topic);
+        L.push("");
+        (day.items||[]).forEach(function(it){
+          L.push("- [ ] **DUE " + fmtShort(it.due) + ", " + typeLabel(it) + ":** " + it.title + " (" + it.points + " pts)");
+        });
+        if(day.nightly && day.nightly.length){
+          L.push("- Recommended tonight, not graded:");
+          day.nightly.forEach(function(n){ L.push("  - [ ] " + n); });
+        }
+        L.push("");
+      });
+    });
+    return L.join("\n");
+  }
+
+  /* --- SLO grade map, CSV --- */
+  function generateSLO(){
+    var sloMap = {};
+    (COURSE.slos||[]).forEach(function(s){ sloMap[s.code] = s.description; });
+    var L = [];
+    L.push(csvRow(["Item ID","Item","Type","Week","Due Date","Points","Percent of Course","SLO Codes","SLO Descriptions"]));
+    ALL_ITEMS.forEach(function(r){
+      var it = r.item;
+      var codes = (it.slo||[]);
+      var pct = ((it.points / TOTAL_POINTS) * 100).toFixed(1);
+      L.push(csvRow([
+        it.id, it.title, typeLabel(it), "Week " + r.week, it.due, it.points, pct + "%",
+        codes.join("; "),
+        codes.map(function(c){ return sloMap[c] || c; }).join("; ")
+      ]));
+    });
+    L.push("");
+    L.push(csvRow(["SLO Summary","","","","","","","",""]));
+    L.push(csvRow(["SLO Code","SLO Description","Items Touching SLO","Points Touching SLO","","","","",""]));
+    (COURSE.slos||[]).forEach(function(s){
+      var hits = ALL_ITEMS.filter(function(r){ return (r.item.slo||[]).indexOf(s.code) > -1; });
+      var pts = hits.reduce(function(a,r){ return a + r.item.points; }, 0);
+      L.push(csvRow([s.code, s.description, hits.length, pts, "","","","",""]));
+    });
+    return L.join("\r\n");
+  }
+
+  /* ---- Download and clipboard ---- */
+  function announce(msg){
+    var el = document.getElementById("export-status");
+    el.textContent = msg;
+  }
+  function download(filename, text, mime){
+    var blob = new Blob([text], { type: (mime||"text/plain") + ";charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  }
+  function copyText(text, label){
+    function ok(){ announce("Copied " + label + " to your clipboard. Paste it into your planner or tool."); }
+    function fail(){ announce("Could not copy automatically. Use the download button instead."); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok, function(){ legacyCopy(text) ? ok() : fail(); });
+    } else {
+      legacyCopy(text) ? ok() : fail();
+    }
+  }
+  function legacyCopy(text){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var done = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return done;
+    }catch(e){ return false; }
+  }
+
+  function handleExport(kind){
+    var base = COURSE.code.replace(/\s+/g,"-").toLowerCase();
+    if(kind === "ics"){
+      download(base + "-schedule.ics", generateICS(), "text/calendar");
+      announce("Calendar file downloaded. Import it into Google Calendar, Apple Calendar, or your planner.");
+    } else if(kind === "anki"){
+      download(base + "-spaced-repetition.csv", generateAnkiCSV(), "text/csv");
+      announce("Spaced-repetition deck downloaded. In Anki, choose File then Import.");
+    } else if(kind === "studyplan"){
+      download(base + "-study-plan.txt", generateStudyPlan(), "text/plain");
+      announce("Nightly study plan downloaded. It schedules your spaced reviews date by date.");
+    } else if(kind === "checklist-copy"){
+      copyText(generateChecklist(), "the planner checklist");
+    } else if(kind === "checklist-file"){
+      download(base + "-planner-checklist.md", generateChecklist(), "text/markdown");
+      announce("Planner checklist downloaded as Markdown.");
+    } else if(kind === "slo-copy"){
+      copyText(generateSLO(), "the SLO grade map");
+    } else if(kind === "slo-file"){
+      download(base + "-slo-grade-map.csv", generateSLO(), "text/csv");
+      announce("SLO grade map downloaded as CSV.");
+    }
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  function init(){
+    /* Header fill */
+    document.getElementById("eyebrow").innerHTML =
+      esc(COURSE.code) + " &middot; " + esc(COURSE.title) + " &middot; " + esc(COURSE.institution);
+    document.title = "Course Schedule, " + COURSE.code + " " + COURSE.title;
+    document.getElementById("course-subhead").innerHTML =
+      esc(COURSE.title) + " &middot; " + esc(COURSE.term);
+    document.getElementById("course-meta").textContent =
+      COURSE.format + ". Meets " + COURSE.meetingPattern + ".";
+    document.getElementById("footer-course").textContent =
+      COURSE.code + " " + COURSE.title + ", " + COURSE.institution + ", " + COURSE.term + ".";
+    if(COURSE.isSampleData){ document.getElementById("sample-flag").hidden = false; }
+
+    /* Set the starting week for weekly view to the current or first week */
+    var ctx = findContext();
+    if(ctx.weekIndex != null) state.weekIndex = ctx.weekIndex;
+
+    /* View switch */
+    document.querySelectorAll('input[name="view"]').forEach(function(radio){
+      radio.addEventListener("change", function(){
+        if(radio.checked){ state.view = radio.value; render(); focusHeading(); }
+      });
+    });
+
+    /* Nightly toggle */
+    document.getElementById("nightly-toggle").addEventListener("change", function(){
+      state.nightly = this.checked;
+      render();
+    });
+
+    /* Export buttons */
+    document.querySelectorAll("[data-export]").forEach(function(btn){
+      btn.addEventListener("click", function(){ handleExport(btn.getAttribute("data-export")); });
+    });
+
+    /* Print, force the full schedule for a clean PDF */
+    var savedView;
+    function toFull(){
+      savedView = state.view;
+      state.view = "full";
+      document.getElementById("view-full").checked = true;
+      render();
+    }
+    function restoreView(){
+      if(savedView){
+        state.view = savedView;
+        var r = document.getElementById("view-" + savedView);
+        if(r) r.checked = true;
+        render();
+        savedView = null;
+      }
+    }
+    document.getElementById("print-btn").addEventListener("click", function(){
+      toFull();
+      window.print();
+    });
+    window.addEventListener("beforeprint", function(){ if(state.view !== "full") toFull(); });
+    window.addEventListener("afterprint", restoreView);
+
+    render();
+  }
+
+  /* Optional scripting hook. Lets the page be driven or tested in code,
+     for example window.CourseScheduleEngine.ics() returns the calendar text. */
+  window.CourseScheduleEngine = {
+    data: DATA,
+    ics: generateICS,
+    ankiCSV: generateAnkiCSV,
+    studyPlan: generateStudyPlan,
+    checklist: generateChecklist,
+    sloCSV: generateSLO
+  };
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<script>
+/* ============================================================
+   IFRAME HEIGHT SENDER.
+   Lets this page size itself correctly when embedded in Canvas
+   or any host via an iframe. Posts the document height to the
+   parent on load, on resize, and whenever the content changes.
+   ============================================================ */
+(function(){
+  function sendHeight(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    try{
+      parent.postMessage({ id: window.name || "course-schedule", frameHeight: h }, "*");
+    }catch(e){}
+  }
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(sendHeight);
+    if(document.body) ro.observe(document.body);
+  }
+  setTimeout(sendHeight, 400);
+})();
+</script>
+</body>
+</html>
