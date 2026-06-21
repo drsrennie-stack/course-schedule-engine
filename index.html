@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Schedule Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
+    --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D; --terra-tint:#F4E7E0;
+    --gray:#5C6B73; --white:#FFFFFF; --offwhite:#FAFAF9;
+    --rest-shadow:0 1px 3px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:var(--navy); background:var(--offwhite); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .skip-link{position:absolute; left:-999px; top:0; background:var(--navy); color:#fff; padding:10px 16px; z-index:100; border-radius:0 0 6px 0;}
+  .skip-link:focus{left:0;}
+  .wrap{max-width:1000px; margin:0 auto; padding:30px 24px 72px;}
+  a{color:inherit;}
+  :focus-visible{outline:3px solid var(--gold); outline-offset:2px; box-shadow:0 0 0 6px var(--navy-deep);}
+
+  .backlink{margin:0 0 12px;}
+  .backlink a{font-weight:700; font-size:13px; color:var(--terra-dark); text-decoration:none;}
+  .backlink a:hover{text-decoration:underline;}
+  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-dark); margin:0 0 8px; display:flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:24px; height:2px; background:var(--terra-dark); display:inline-block;}
+  h1{font-weight:800; color:var(--terra-dark); font-size:34px; margin:0 0 6px; line-height:1.06;}
+  .lead{font-weight:500; color:var(--navy); font-size:16px; margin:0 0 22px; max-width:640px;}
+
+  .card{background:var(--white); border:1px solid var(--navy-tint); border-radius:12px; padding:18px 20px; box-shadow:var(--rest-shadow); margin-bottom:18px;}
+  .card h2{font-weight:800; color:var(--terra-dark); font-size:14px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 14px;}
+  .row{display:flex; flex-wrap:wrap; gap:14px 20px; align-items:flex-end;}
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--navy);}
+  .field input{font-family:inherit; font-size:15px; color:var(--navy); border:1px solid var(--navy); border-radius:6px; padding:8px 10px; background:var(--white);}
+  .field input[type=number]{width:90px;}
+  .days{display:flex; gap:6px; flex-wrap:wrap;}
+  .day{display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:700; color:var(--navy); border:1px solid var(--navy); border-radius:7px; padding:7px 11px; cursor:pointer; user-select:none;}
+  .day input{accent-color:var(--terra-dark);}
+  textarea{font-family:inherit; font-size:14px; color:var(--navy); border:1px solid var(--navy); border-radius:6px; padding:9px 11px; width:100%; min-height:130px; resize:vertical; background:var(--white);}
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:640px){ .twocol{grid-template-columns:1fr;} }
+  .hint{font-size:12px; color:var(--gray); font-weight:500; margin:5px 0 0;}
+
+  .btn{font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:6px; padding:9px 16px; border:1px solid var(--navy); background:var(--navy); color:#fff; transition:background 160ms ease, transform 160ms ease;}
+  .btn:hover{background:var(--navy-deep); transform:translateY(-1px);}
+  .btn.secondary{background:var(--white); color:var(--navy);}
+  .btn.secondary:hover{background:var(--navy-tint);}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+  .note{font-size:13px; color:var(--terra-dark); font-weight:600;}
+
+  table{border-collapse:collapse; width:100%; font-size:14px;}
+  caption{text-align:left; font-weight:800; color:var(--navy); font-size:16px; padding:0 0 10px;}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--navy-tint); vertical-align:top;}
+  thead th{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--terra-dark); border-bottom:2px solid var(--navy-tint);}
+  tbody tr.exam td{background:var(--terra-tint);}
+  td .wk{font-weight:800; color:var(--navy);}
+  td .topic{font-weight:600;}
+  td.exam-topic .topic{color:var(--terra-dark);}
+  .sessno{color:var(--gray); font-weight:700; font-size:12px;}
+
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important;} }
+  @media print{
+    .no-print{display:none !important;}
+    body{background:#fff; font-size:11px;}
+    .wrap{max-width:none; padding:0;}
+    .card{box-shadow:none; border:none; padding:0;}
+    @page{size:Letter portrait; margin:0.5in;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#out">Skip to schedule</a>
+<div class="wrap">
+
+  <header>
+    <p class="backlink no-print"><a href="https://drsrennie-stack.github.io/Anatomy-Lab-Exam-Set-up-room-prep/" target="_top">&larr; Course portal</a></p>
+    <p class="eyebrow">Teaching Tools</p>
+    <h1>Course Schedule Engine</h1>
+    <p class="lead">Set the term once, list your topics, and generate a dated session calendar. Clone it next semester and just shift the start date.</p>
+  </header>
+
+  <section class="card no-print" aria-label="Schedule setup">
+    <h2>Setup</h2>
+    <div class="row">
+      <div class="field"><label for="title">Course title</label><input type="text" id="title" placeholder="BIO 004 Human Anatomy" autocomplete="off"></div>
+      <div class="field"><label for="start">Term start date</label><input type="date" id="start"></div>
+      <div class="field"><label for="weeks">Weeks</label><input type="number" id="weeks" min="1" max="20" value="8"></div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label>Meeting days</label>
+      <div class="days" id="days">
+        <label class="day"><input type="checkbox" value="1" checked>Mon</label>
+        <label class="day"><input type="checkbox" value="2" checked>Tue</label>
+        <label class="day"><input type="checkbox" value="3" checked>Wed</label>
+        <label class="day"><input type="checkbox" value="4" checked>Thu</label>
+        <label class="day"><input type="checkbox" value="5">Fri</label>
+        <label class="day"><input type="checkbox" value="6">Sat</label>
+        <label class="day"><input type="checkbox" value="0">Sun</label>
+      </div>
+    </div>
+    <div class="twocol" style="margin-top:16px;">
+      <div class="field">
+        <label for="topics">Topics &middot; one per session, in order</label>
+        <textarea id="topics" placeholder="Orientation &amp; safety&#10;Body organization &amp; terminology&#10;Histology&#10;Lab Exam 1&#10;Skeletal: axial&#10;Midterm"></textarea>
+        <p class="hint">Lines containing exam, midterm, final, practical, or quiz are highlighted.</p>
+      </div>
+      <div class="field">
+        <label for="holidays">Holidays / no-class dates &middot; one per line (YYYY-MM-DD)</label>
+        <textarea id="holidays" placeholder="2026-07-03&#10;2026-07-04"></textarea>
+        <p class="hint">These dates are skipped; topics shift to the next meeting day.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions no-print">
+    <button type="button" class="btn" id="genBtn">Generate schedule</button>
+    <button type="button" class="btn secondary" id="printBtn">Print</button>
+    <button type="button" class="btn secondary" id="csvBtn">Export CSV</button>
+    <span class="note" id="msg" aria-live="polite">Your setup saves automatically on this computer.</span>
+  </div>
+
+  <section class="card" id="out" aria-label="Generated schedule" aria-live="polite">
+    <div id="tableHost"><p class="hint">Fill in the setup and click Generate schedule.</p></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="course_schedule_engine_v1";
+  var DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var $=function(id){return document.getElementById(id);};
+
+  function selectedDays(){
+    return Array.prototype.slice.call(document.querySelectorAll("#days input:checked")).map(function(c){return +c.value;});
+  }
+  function parseDate(s){ var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec((s||"").trim()); if(!m) return null; var d=new Date(+m[1],+m[2]-1,+m[3]); return isNaN(d)?null:d; }
+  function fmt(d){ return DOW[d.getDay()]+" "+(d.getMonth()+1)+"/"+d.getDate(); }
+  function isoOf(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function isExam(t){ return /\b(exam|midterm|final|practical|quiz)\b/i.test(t||""); }
+
+  function save(){
+    var data={ title:$("title").value, start:$("start").value, weeks:$("weeks").value,
+      days:selectedDays(), topics:$("topics").value, holidays:$("holidays").value };
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+  function load(){
+    var d; try{ d=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){}
+    if(!d) return;
+    $("title").value=d.title||""; $("start").value=d.start||""; $("weeks").value=d.weeks||8;
+    $("topics").value=d.topics||""; $("holidays").value=d.holidays||"";
+    if(d.days){ document.querySelectorAll("#days input").forEach(function(c){ c.checked=d.days.indexOf(+c.value)>=0; }); }
+  }
+
+  var lastRows=[];
+  function generate(){
+    var start=parseDate($("start").value);
+    var weeks=Math.max(1, Math.min(20, parseInt($("weeks").value,10)||8));
+    var days=selectedDays();
+    var topics=$("topics").value.split("\n").map(function(x){return x.trim();}).filter(Boolean);
+    var holidays={}; $("holidays").value.split("\n").map(function(x){return x.trim();}).filter(Boolean).forEach(function(h){ holidays[h]=true; });
+    var host=$("tableHost");
+    if(!start){ host.innerHTML='<p class="hint">Enter a valid term start date to generate.</p>'; lastRows=[]; return; }
+    if(!days.length){ host.innerHTML='<p class="hint">Select at least one meeting day.</p>'; lastRows=[]; return; }
+
+    // collect sessions across the weeks window
+    var sessions=[]; var cur=new Date(start); var ti=0;
+    for(var dd=0; dd<weeks*7; dd++){
+      var wk=Math.floor(dd/7)+1;
+      if(days.indexOf(cur.getDay())>=0 && !holidays[isoOf(cur)]){
+        sessions.push({ wk:wk, date:new Date(cur), topic: topics[ti]||"" , no: sessions.length+1});
+        ti++;
+      }
+      cur.setDate(cur.getDate()+1);
+    }
+    lastRows=sessions;
+
+    var rows="", lastWk=0;
+    sessions.forEach(function(s){
+      var ex=isExam(s.topic);
+      var wkCell = (s.wk!==lastWk) ? '<span class="wk">Week '+s.wk+'</span>' : '';
+      lastWk=s.wk;
+      rows+='<tr class="'+(ex?"exam":"")+'">'+
+        '<td>'+wkCell+'</td>'+
+        '<td>'+fmt(s.date)+'</td>'+
+        '<td class="'+(ex?"exam-topic":"")+'"><span class="sessno">#'+s.no+'</span> <span class="topic">'+(s.topic?esc(s.topic):"&mdash;")+'</span></td>'+
+      '</tr>';
+    });
+    var leftover = topics.length - sessions.length;
+    var cap=( $("title").value ? esc($("title").value)+" — " : "")+sessions.length+" sessions over "+weeks+" weeks";
+    host.innerHTML='<table><caption>'+cap+'</caption>'+
+      '<thead><tr><th>Week</th><th>Date</th><th>Session &amp; topic</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      (leftover>0?'<p class="hint" style="margin-top:10px;color:#A0522D;">'+leftover+' topic'+(leftover>1?'s':'')+' did not fit in '+weeks+' weeks. Add weeks or meeting days.</p>':'');
+    $("msg").textContent=sessions.length+" sessions generated.";
+  }
+
+  function exportCSV(){
+    if(!lastRows.length){ generate(); if(!lastRows.length){ $("msg").textContent="Nothing to export yet."; return; } }
+    var title=$("title").value||"course";
+    var rows=[["Week","Date","Session","Topic"]];
+    lastRows.forEach(function(s){ rows.push([s.wk, isoOf(s.date)+" "+DOW[s.date.getDay()], s.no, s.topic]); });
+    var csv=rows.map(function(r){ return r.map(function(c){ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(","); }).join("\r\n");
+    var fn=("schedule-"+title).replace(/[^a-z0-9]+/gi,"-").toLowerCase();
+    var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8;"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=fn+".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+    $("msg").textContent="Exported "+lastRows.length+" rows.";
+  }
+
+  document.addEventListener("input",function(e){ if(e.target.closest("#days, .card")) { save(); } });
+  $("genBtn").addEventListener("click",generate);
+  $("printBtn").addEventListener("click",function(){ generate(); window.print(); });
+  $("csvBtn").addEventListener("click",exportCSV);
+
+  load(); generate();
+})();
+</script>
+
+<script>
+(function(){
+  function sendHeight(){ try{ parent.postMessage({ id:"course-schedule-engine", height:document.documentElement.scrollHeight }, "*"); }catch(e){} }
+  window.addEventListener("load", sendHeight); window.addEventListener("resize", sendHeight);
+  if(window.ResizeObserver){ new ResizeObserver(sendHeight).observe(document.body); }
+})();
+</script>
+</body>
+</html>
