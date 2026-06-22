@@ -3,179 +3,241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Portal</title>
+<title>Course Schedule Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
-    --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D;
-    --gray:#5C6B73; --white:#FFFFFF; --offwhite:#FAFAF9;
+    --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#EAECEF;
+    --gold:#C9A14A; --terra:#8B3A2E; --terra-dark:#8B3A2E; --terra-tint:#F3E7E3;
+    --gray:#5C6B73; --white:#FFFFFF; --offwhite:#FFFFFF;
     --rest-shadow:0 1px 3px rgba(0,0,0,0.08);
-    --hover-shadow:0 10px 22px rgba(20,42,54,0.12);
   }
   *{box-sizing:border-box;}
   html,body{margin:0; padding:0;}
   body{font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:var(--navy); background:var(--offwhite); line-height:1.5; -webkit-font-smoothing:antialiased;}
   .skip-link{position:absolute; left:-999px; top:0; background:var(--navy); color:#fff; padding:10px 16px; z-index:100; border-radius:0 0 6px 0;}
   .skip-link:focus{left:0;}
-  .wrap{max-width:1240px; margin:0 auto; padding:40px 28px 72px;}
+  .wrap{max-width:1000px; margin:0 auto; padding:30px 24px 72px;}
+  .brandbar{display:flex; align-items:center; gap:14px; text-decoration:none; padding-bottom:16px; margin-bottom:16px; border-bottom:.5px solid rgba(11,21,48,.10);}
+  .brandbar svg{height:44px; width:auto; display:block;}
+  .brandbar .bt{display:flex; flex-direction:column; gap:2px;}
+  .brandbar .bt .t{font-size:21px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
+  .brandbar .bt .t .a{color:var(--terra);}
+  .brandbar .bt .s{font-size:10.5px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--navy); opacity:.72;}
+  @media print{ .brandbar{display:none !important;} }
   a{color:inherit;}
-  :focus-visible{outline:3px solid var(--gold); outline-offset:3px; box-shadow:0 0 0 6px var(--navy-deep);}
+  :focus-visible{outline:3px solid var(--gold); outline-offset:2px; box-shadow:0 0 0 6px var(--navy-deep);}
 
-  header.portal{margin-bottom:34px; max-width:900px;}
-  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-dark); margin:0 0 10px; display:flex; align-items:center; gap:8px;}
-  .eyebrow::before{content:""; width:26px; height:2px; background:var(--terra-dark); display:inline-block;}
-  h1{font-weight:800; color:var(--navy); font-size:54px; margin:0 0 12px; line-height:1.03; letter-spacing:-0.01em;}
-  .lead{font-weight:500; color:var(--navy); font-size:21px; margin:0 0 18px;}
-  .chips{display:flex; gap:8px; flex-wrap:wrap;}
-  .chip{font-size:12px; font-weight:700; color:var(--navy); background:var(--white); border:1px solid var(--navy-tint); border-radius:20px; padding:5px 12px;}
-  section.group{margin-bottom:34px;}
-  .group-label{font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--navy); margin:0 0 14px; display:flex; align-items:center; gap:10px;}
-  .group-label::after{content:""; flex:1; height:1px; background:var(--navy-tint);}
+  .backlink{margin:0 0 12px;}
+  .backlink a{font-weight:700; font-size:13px; color:var(--terra-dark); text-decoration:none;}
+  .backlink a:hover{text-decoration:underline;}
+  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-dark); margin:0 0 8px; display:flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:24px; height:2px; background:var(--terra-dark); display:inline-block;}
+  h1{font-weight:800; color:var(--navy); font-size:34px; margin:0 0 6px; line-height:1.06;}
+  h1 .a{color:var(--terra);}
+  .lead{font-weight:500; color:var(--navy); font-size:16px; margin:0 0 22px; max-width:640px;}
 
-  .cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:20px;}
-  .card{position:relative; display:flex; flex-direction:column; gap:11px; background:var(--white); border:1px solid var(--navy-tint); border-radius:14px; padding:26px; text-decoration:none; box-shadow:var(--rest-shadow); transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; min-height:210px;}
-  a.card:hover{transform:translateY(-3px); box-shadow:var(--hover-shadow); border-color:var(--navy);}
-  .topline{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .ic{width:46px; height:46px; border-radius:12px; background:var(--navy-tint); display:flex; align-items:center; justify-content:center;}
-  .ic svg{width:25px; height:25px;}
-  .code{font-weight:800; font-size:13px; letter-spacing:.06em; color:#FFFFFF; background:var(--navy); border-radius:8px; padding:6px 12px;}
-  .card h2{font-weight:800; color:var(--navy); font-size:24px; margin:2px 0 0; line-height:1.15;}
-  .card p{font-weight:500; color:var(--gray); font-size:15.5px; margin:0;}
-  .foot{margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:10px;}
-  .go{font-weight:800; font-size:15px; color:var(--navy); display:inline-flex; align-items:center; gap:7px;}
-  .go::after{content:"\2192"; font-size:17px;}
-  .status{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--terra-dark);}
-  .status .dot{width:8px; height:8px; border-radius:50%; background:var(--terra-dark); box-shadow:0 0 0 3px rgba(160,82,45,0.18);}
+  .card{background:var(--white); border:1px solid var(--navy-tint); border-radius:12px; padding:18px 20px; box-shadow:var(--rest-shadow); margin-bottom:18px;}
+  .card h2{font-weight:800; color:var(--terra-dark); font-size:14px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 14px;}
+  .row{display:flex; flex-wrap:wrap; gap:14px 20px; align-items:flex-end;}
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--navy);}
+  .field input{font-family:inherit; font-size:15px; color:var(--navy); border:1px solid var(--navy); border-radius:6px; padding:8px 10px; background:var(--white);}
+  .field input[type=number]{width:90px;}
+  .days{display:flex; gap:6px; flex-wrap:wrap;}
+  .day{display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:700; color:var(--navy); border:1px solid var(--navy); border-radius:7px; padding:7px 11px; cursor:pointer; user-select:none;}
+  .day input{accent-color:var(--terra-dark);}
+  textarea{font-family:inherit; font-size:14px; color:var(--navy); border:1px solid var(--navy); border-radius:6px; padding:9px 11px; width:100%; min-height:130px; resize:vertical; background:var(--white);}
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:640px){ .twocol{grid-template-columns:1fr;} }
+  .hint{font-size:12px; color:var(--gray); font-weight:500; margin:5px 0 0;}
 
-  .card.soon{cursor:default; box-shadow:none; background:var(--offwhite); border-style:dashed; border-color:#C7D0D5;}
-  .card.soon .ic{background:#E7EBEE;}
-  .card.soon .code{background:var(--gray);}
-  .card.soon h2{color:var(--gray);}
-  .card.soon .status{color:var(--gray);}
-  .card.soon .status .dot{background:var(--gray); box-shadow:none;}
+  .btn{font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:6px; padding:9px 16px; border:1px solid var(--navy); background:var(--navy); color:#fff; transition:background 160ms ease, transform 160ms ease;}
+  .btn:hover{background:var(--navy-deep); transform:translateY(-1px);}
+  .btn.secondary{background:var(--white); color:var(--navy);}
+  .btn.secondary:hover{background:var(--navy-tint);}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+  .note{font-size:13px; color:var(--terra-dark); font-weight:600;}
 
-  footer.portal{margin-top:50px; padding-top:18px; border-top:1px solid var(--navy-tint); font-weight:500; font-size:13px; color:var(--gray);}
+  table{border-collapse:collapse; width:100%; font-size:14px;}
+  caption{text-align:left; font-weight:800; color:var(--navy); font-size:16px; padding:0 0 10px;}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--navy-tint); vertical-align:top;}
+  thead th{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--terra-dark); border-bottom:2px solid var(--navy-tint);}
+  tbody tr.exam td{background:var(--terra-tint);}
+  td .wk{font-weight:800; color:var(--navy);}
+  td .topic{font-weight:600;}
+  td.exam-topic .topic{color:var(--terra-dark);}
+  .sessno{color:var(--gray); font-weight:700; font-size:12px;}
+
   @media (prefers-reduced-motion:reduce){ *{transition:none !important;} }
-  @media (max-width:560px){ h1{font-size:34px;} }
+  @media print{
+    .no-print{display:none !important;}
+    body{background:#fff; font-size:11px;}
+    .wrap{max-width:none; padding:0;}
+    .card{box-shadow:none; border:none; padding:0;}
+    @page{size:Letter portrait; margin:0.5in;}
+  }
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to courses</a>
+<a class="skip-link" href="#out">Skip to schedule</a>
 <div class="wrap">
 
-  <header class="portal">
-    <p class="eyebrow">Dr. Sharilyn Rennie &middot; Teaching</p>
-    <h1>Course Portal</h1>
-    <p class="lead">One place for every course: lab exam setup, attendance, prep, and semester planning.</p>
-    <div class="chips">
-      <span class="chip">5 courses</span>
-      <span class="chip">Anatomy &amp; Physiology</span>
-      <span class="chip">Solano &middot; American River</span>
-    </div>
+  <a class="brandbar no-print" href="https://drsrennie-stack.github.io/Anatomy-Lab-Exam-Set-up-room-prep/" target="_top" aria-label="Course portal, home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
+    <span class="bt"><span class="t">Human <span class="a">Anatomy</span></span><span class="s">BIO 004 &middot; Solano Community College</span></span>
+  </a>
+
+  <header>
+    <p class="backlink no-print"><a href="https://drsrennie-stack.github.io/Anatomy-Lab-Exam-Set-up-room-prep/" target="_top">&larr; Course portal</a></p>
+    <p class="eyebrow">Teaching Tools</p>
+    <h1>Course Schedule <span class="a">Engine</span></h1>
+    <p class="lead">Set the term once, list your topics, and generate a dated session calendar. Clone it next semester and just shift the start date.</p>
   </header>
 
-  <main id="main">
-    <section class="group" aria-labelledby="g-courses">
-    <p class="group-label" id="g-courses">Courses</p>
-    <div class="cards">
-
-      <a class="card" href="https://drsrennie-stack.github.io/Anatomy-Lab-Exam-Set-up-room-prep/bio004-course-hub.html" target="_blank" rel="noopener">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3D4C" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.4"/><path d="m9 20 3-6 3 6"/><path d="m6 8.5 6 1.8 6-1.8"/><path d="M12 10.3V14"/></svg></span>
-          <span class="code">BIO 004</span>
-        </div>
-        <h2>Human Anatomy</h2>
-        <p>Solano Community College. Anatomy only, Team-Based Learning.</p>
-        <div class="foot"><span class="go">Open course hub</span><span class="status"><span class="dot"></span>Live</span></div>
-      </a>
-
-      <div class="card soon" role="group" aria-label="BIO 430 Human Anatomy and Physiology, coming soon">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5C6B73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z"/></svg></span>
-          <span class="code">BIO 430</span>
-        </div>
-        <h2>Human Anatomy &amp; Physiology</h2>
-        <p>Combined anatomy and physiology.</p>
-        <div class="foot"><span class="go">&nbsp;</span><span class="status"><span class="dot"></span>Coming soon</span></div>
-      </div>
-
-      <div class="card soon" role="group" aria-label="BIO 431 Human Anatomy and Physiology, coming soon">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5C6B73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z"/><path d="M3.4 11.5h4.3l1-2 2 4.5 1.6-3.2 1 0.7h4.1" stroke-width="1.4"/></svg></span>
-          <span class="code">BIO 431</span>
-        </div>
-        <h2>Human Anatomy &amp; Physiology</h2>
-        <p>American River College. Combined A&amp;P, Team-Based Learning.</p>
-        <div class="foot"><span class="go">&nbsp;</span><span class="status"><span class="dot"></span>Coming soon</span></div>
-      </div>
-
-      <div class="card soon" role="group" aria-label="BIO 005 Human Physiology, coming soon">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5C6B73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
-          <span class="code">BIO 005</span>
-        </div>
-        <h2>Human Physiology</h2>
-        <p>Physiology focus.</p>
-        <div class="foot"><span class="go">&nbsp;</span><span class="status"><span class="dot"></span>Coming soon</span></div>
-      </div>
-
-      <div class="card soon" role="group" aria-label="BIO 307 Non-Majors Human Anatomy and Physiology, coming soon">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5C6B73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-          <span class="code">BIO 307</span>
-        </div>
-        <h2>Non-Majors Human Anatomy &amp; Physiology</h2>
-        <p>Introductory combined A&amp;P for non-majors.</p>
-        <div class="foot"><span class="go">&nbsp;</span><span class="status"><span class="dot"></span>Coming soon</span></div>
-      </div>
-
+  <section class="card no-print" aria-label="Schedule setup">
+    <h2>Setup</h2>
+    <div class="row">
+      <div class="field"><label for="title">Course title</label><input type="text" id="title" placeholder="BIO 004 Human Anatomy" autocomplete="off"></div>
+      <div class="field"><label for="start">Term start date</label><input type="date" id="start"></div>
+      <div class="field"><label for="weeks">Weeks</label><input type="number" id="weeks" min="1" max="20" value="8"></div>
     </div>
-    </section>
-
-    <section class="group" aria-labelledby="g-tools">
-    <p class="group-label" id="g-tools">Teaching Tools</p>
-    <div class="cards">
-
-      <a class="card" href="https://drsrennie-stack.github.io/attendance/" target="_blank" rel="noopener">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3D4C" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3 3 0 100-6 3 3 0 000 6z"/><path d="M3 20a6 6 0 0112 0"/><path d="M16 11l2 2 4-4"/></svg></span>
-        </div>
-        <h2>Attendance</h2>
-        <p>Mark lab attendance by section and date, then export. Session-only, no identifiers stored.</p>
-        <div class="foot"><span class="go">Open tool</span><span class="status"><span class="dot"></span>Live</span></div>
-      </a>
-
-      <a class="card" href="https://drsrennie-stack.github.io/course-schedule-engine/" target="_blank" rel="noopener">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3D4C" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="M7 13h3M7 16.5h3M14 13h3"/></svg></span>
-        </div>
-        <h2>Course Schedule Engine</h2>
-        <p>Generate a dated session calendar from a start date, meeting days, and your topic list. Clone each term.</p>
-        <div class="foot"><span class="go">Open tool</span><span class="status"><span class="dot"></span>Live</span></div>
-      </a>
-
-      <div class="card soon" role="group" aria-label="Course Hub Builder, coming soon">
-        <div class="topline">
-          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5C6B73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg></span>
-        </div>
-        <h2>Course Hub Builder</h2>
-        <p>Spin up a branded hub for any course, then drop these tools in. Built from course-creator-tools.</p>
-        <div class="foot"><span class="go">&nbsp;</span><span class="status"><span class="dot"></span>Coming soon</span></div>
+    <div class="field" style="margin-top:14px;">
+      <label>Meeting days</label>
+      <div class="days" id="days">
+        <label class="day"><input type="checkbox" value="1" checked>Mon</label>
+        <label class="day"><input type="checkbox" value="2" checked>Tue</label>
+        <label class="day"><input type="checkbox" value="3" checked>Wed</label>
+        <label class="day"><input type="checkbox" value="4" checked>Thu</label>
+        <label class="day"><input type="checkbox" value="5">Fri</label>
+        <label class="day"><input type="checkbox" value="6">Sat</label>
+        <label class="day"><input type="checkbox" value="0">Sun</label>
       </div>
-
     </div>
-    </section>
-  </main>
+    <div class="twocol" style="margin-top:16px;">
+      <div class="field">
+        <label for="topics">Topics &middot; one per session, in order</label>
+        <textarea id="topics" placeholder="Orientation &amp; safety&#10;Body organization &amp; terminology&#10;Histology&#10;Lab Exam 1&#10;Skeletal: axial&#10;Midterm"></textarea>
+        <p class="hint">Lines containing exam, midterm, final, practical, or quiz are highlighted.</p>
+      </div>
+      <div class="field">
+        <label for="holidays">Holidays / no-class dates &middot; one per line (YYYY-MM-DD)</label>
+        <textarea id="holidays" placeholder="2026-07-03&#10;2026-07-04"></textarea>
+        <p class="hint">These dates are skipped; topics shift to the next meeting day.</p>
+      </div>
+    </div>
+  </section>
 
-  <footer class="portal">Built by Dr. Sharilyn Rennie.</footer>
+  <div class="actions no-print">
+    <button type="button" class="btn" id="genBtn">Generate schedule</button>
+    <button type="button" class="btn secondary" id="printBtn">Print</button>
+    <button type="button" class="btn secondary" id="csvBtn">Export CSV</button>
+    <span class="note" id="msg" aria-live="polite">Your setup saves automatically on this computer.</span>
+  </div>
+
+  <section class="card" id="out" aria-label="Generated schedule" aria-live="polite">
+    <div id="tableHost"><p class="hint">Fill in the setup and click Generate schedule.</p></div>
+  </section>
 </div>
 
 <script>
 (function(){
-  function sendHeight(){ try{ parent.postMessage({ id:"course-portal", height:document.documentElement.scrollHeight }, "*"); }catch(e){} }
+  "use strict";
+  var KEY="course_schedule_engine_v1";
+  var DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var $=function(id){return document.getElementById(id);};
+
+  function selectedDays(){
+    return Array.prototype.slice.call(document.querySelectorAll("#days input:checked")).map(function(c){return +c.value;});
+  }
+  function parseDate(s){ var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec((s||"").trim()); if(!m) return null; var d=new Date(+m[1],+m[2]-1,+m[3]); return isNaN(d)?null:d; }
+  function fmt(d){ return DOW[d.getDay()]+" "+(d.getMonth()+1)+"/"+d.getDate(); }
+  function isoOf(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function isExam(t){ return /\b(exam|midterm|final|practical|quiz)\b/i.test(t||""); }
+
+  function save(){
+    var data={ title:$("title").value, start:$("start").value, weeks:$("weeks").value,
+      days:selectedDays(), topics:$("topics").value, holidays:$("holidays").value };
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+  function load(){
+    var d; try{ d=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){}
+    if(!d) return;
+    $("title").value=d.title||""; $("start").value=d.start||""; $("weeks").value=d.weeks||8;
+    $("topics").value=d.topics||""; $("holidays").value=d.holidays||"";
+    if(d.days){ document.querySelectorAll("#days input").forEach(function(c){ c.checked=d.days.indexOf(+c.value)>=0; }); }
+  }
+
+  var lastRows=[];
+  function generate(){
+    var start=parseDate($("start").value);
+    var weeks=Math.max(1, Math.min(20, parseInt($("weeks").value,10)||8));
+    var days=selectedDays();
+    var topics=$("topics").value.split("\n").map(function(x){return x.trim();}).filter(Boolean);
+    var holidays={}; $("holidays").value.split("\n").map(function(x){return x.trim();}).filter(Boolean).forEach(function(h){ holidays[h]=true; });
+    var host=$("tableHost");
+    if(!start){ host.innerHTML='<p class="hint">Enter a valid term start date to generate.</p>'; lastRows=[]; return; }
+    if(!days.length){ host.innerHTML='<p class="hint">Select at least one meeting day.</p>'; lastRows=[]; return; }
+
+    // collect sessions across the weeks window
+    var sessions=[]; var cur=new Date(start); var ti=0;
+    for(var dd=0; dd<weeks*7; dd++){
+      var wk=Math.floor(dd/7)+1;
+      if(days.indexOf(cur.getDay())>=0 && !holidays[isoOf(cur)]){
+        sessions.push({ wk:wk, date:new Date(cur), topic: topics[ti]||"" , no: sessions.length+1});
+        ti++;
+      }
+      cur.setDate(cur.getDate()+1);
+    }
+    lastRows=sessions;
+
+    var rows="", lastWk=0;
+    sessions.forEach(function(s){
+      var ex=isExam(s.topic);
+      var wkCell = (s.wk!==lastWk) ? '<span class="wk">Week '+s.wk+'</span>' : '';
+      lastWk=s.wk;
+      rows+='<tr class="'+(ex?"exam":"")+'">'+
+        '<td>'+wkCell+'</td>'+
+        '<td>'+fmt(s.date)+'</td>'+
+        '<td class="'+(ex?"exam-topic":"")+'"><span class="sessno">#'+s.no+'</span> <span class="topic">'+(s.topic?esc(s.topic):"&mdash;")+'</span></td>'+
+      '</tr>';
+    });
+    var leftover = topics.length - sessions.length;
+    var cap=( $("title").value ? esc($("title").value)+" — " : "")+sessions.length+" sessions over "+weeks+" weeks";
+    host.innerHTML='<table><caption>'+cap+'</caption>'+
+      '<thead><tr><th>Week</th><th>Date</th><th>Session &amp; topic</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      (leftover>0?'<p class="hint" style="margin-top:10px;color:#8B3A2E;">'+leftover+' topic'+(leftover>1?'s':'')+' did not fit in '+weeks+' weeks. Add weeks or meeting days.</p>':'');
+    $("msg").textContent=sessions.length+" sessions generated.";
+  }
+
+  function exportCSV(){
+    if(!lastRows.length){ generate(); if(!lastRows.length){ $("msg").textContent="Nothing to export yet."; return; } }
+    var title=$("title").value||"course";
+    var rows=[["Week","Date","Session","Topic"]];
+    lastRows.forEach(function(s){ rows.push([s.wk, isoOf(s.date)+" "+DOW[s.date.getDay()], s.no, s.topic]); });
+    var csv=rows.map(function(r){ return r.map(function(c){ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(","); }).join("\r\n");
+    var fn=("schedule-"+title).replace(/[^a-z0-9]+/gi,"-").toLowerCase();
+    var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8;"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=fn+".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+    $("msg").textContent="Exported "+lastRows.length+" rows.";
+  }
+
+  document.addEventListener("input",function(e){ if(e.target.closest("#days, .card")) { save(); } });
+  $("genBtn").addEventListener("click",generate);
+  $("printBtn").addEventListener("click",function(){ generate(); window.print(); });
+  $("csvBtn").addEventListener("click",exportCSV);
+
+  load(); generate();
+})();
+</script>
+
+<script>
+(function(){
+  function sendHeight(){ try{ parent.postMessage({ id:"course-schedule-engine", height:document.documentElement.scrollHeight }, "*"); }catch(e){} }
   window.addEventListener("load", sendHeight); window.addEventListener("resize", sendHeight);
   if(window.ResizeObserver){ new ResizeObserver(sendHeight).observe(document.body); }
 })();
